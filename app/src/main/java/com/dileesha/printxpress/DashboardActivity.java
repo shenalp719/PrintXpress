@@ -11,7 +11,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class DashboardActivity extends AppCompatActivity {
 
-    Button btnBusinessCards, btnFlyers, btnMugs, btnTshirts, btnGallery, btnSupport;
+    Button btnStickers, btnFlyers, btnTshirts, btnPosters, btnMugs, btnBanners, btnGallery, btnSupport;
     BottomNavigationView bottomNavigationView;
 
     @Override
@@ -19,36 +19,43 @@ public class DashboardActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
 
-        btnBusinessCards = findViewById(R.id.btnBusinessCards);
+        // Map the 6 new product buttons
+        btnStickers = findViewById(R.id.btnStickers);
         btnFlyers = findViewById(R.id.btnFlyers);
-        btnMugs = findViewById(R.id.btnMugs);
         btnTshirts = findViewById(R.id.btnTshirts);
+        btnPosters = findViewById(R.id.btnPosters);
+        btnMugs = findViewById(R.id.btnMugs);
+        btnBanners = findViewById(R.id.btnBanners);
+
         btnGallery = findViewById(R.id.btnGallery);
         btnSupport = findViewById(R.id.btnSupport);
         bottomNavigationView = findViewById(R.id.bottomNavigationView);
 
+        // Safely pass the text of the button to the Order Activity (Fixes the crash)
         View.OnClickListener productClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Button clickedButton = (Button) v;
-                String rawName = clickedButton.getText().toString();
-                String cleanName = rawName.substring(rawName.indexOf("(") + 1, rawName.indexOf(")"));
+                String productName = clickedButton.getText().toString();
 
                 Intent intent = new Intent(DashboardActivity.this, OrderActivity.class);
-                intent.putExtra("PRODUCT_NAME", cleanName);
+                intent.putExtra("PRODUCT_NAME", productName);
                 startActivity(intent);
             }
         };
 
-        btnBusinessCards.setOnClickListener(productClickListener);
+        // Attach the listener to all 6 buttons
+        btnStickers.setOnClickListener(productClickListener);
         btnFlyers.setOnClickListener(productClickListener);
-        btnMugs.setOnClickListener(productClickListener);
         btnTshirts.setOnClickListener(productClickListener);
+        btnPosters.setOnClickListener(productClickListener);
+        btnMugs.setOnClickListener(productClickListener);
+        btnBanners.setOnClickListener(productClickListener);
 
         btnGallery.setOnClickListener(v -> startActivity(new Intent(DashboardActivity.this, GalleryActivity.class)));
         btnSupport.setOnClickListener(v -> startActivity(new Intent(DashboardActivity.this, SupportActivity.class)));
 
-        // CORRECTED: Uses DashboardActivity.this
+        // Bottom Navigation
         bottomNavigationView.setSelectedItemId(R.id.nav_home);
 
         bottomNavigationView.setOnItemSelectedListener(new BottomNavigationView.OnItemSelectedListener() {

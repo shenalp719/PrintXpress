@@ -34,9 +34,10 @@
                 android:textColor="#FF003C"
                 android:layout_marginBottom="24dp"/>
 
+            <!-- ROW 1: Business Cards & Stickers -->
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="120dp"
+                android:layout_height="110dp"
                 android:orientation="horizontal"
                 android:layout_marginBottom="12dp">
 
@@ -46,28 +47,71 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:layout_marginEnd="6dp"
-                    android:text="[SYS//CARDS]\nBusiness Cards"
+                    android:text="Business Cards"
                     android:textColor="#00E5FF"
                     android:background="@drawable/cyber_card_bg"
+                    android:drawableTop="@android:drawable/ic_menu_recent_history"
+                    android:drawableTint="#00E5FF"
+                    android:paddingTop="20dp"
                     android:textStyle="bold"/>
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/btnStickers"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:layout_marginStart="6dp"
+                    android:text="Stickers"
+                    android:textColor="#9D00FF"
+                    android:background="@drawable/cyber_card_bg"
+                    android:drawableTop="@android:drawable/ic_menu_crop"
+                    android:drawableTint="#9D00FF"
+                    android:paddingTop="20dp"
+                    android:textStyle="bold"/>
+            </LinearLayout>
+
+            <!-- ROW 2: Flyers & Posters -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="110dp"
+                android:orientation="horizontal"
+                android:layout_marginBottom="12dp">
 
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/btnFlyers"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:layout_marginStart="6dp"
-                    android:text="[NET//FLYERS]\nPosters &amp; Flyers"
-                    android:textColor="#9D00FF"
+                    android:layout_marginEnd="6dp"
+                    android:text="Flyers"
+                    android:textColor="#FF003C"
                     android:background="@drawable/cyber_card_bg"
+                    android:drawableTop="@android:drawable/ic_menu_gallery"
+                    android:drawableTint="#FF003C"
+                    android:paddingTop="20dp"
+                    android:textStyle="bold"/>
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/btnPosters"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:layout_marginStart="6dp"
+                    android:text="Posters"
+                    android:textColor="#00E5FF"
+                    android:background="@drawable/cyber_card_bg"
+                    android:drawableTop="@android:drawable/ic_menu_mapmode"
+                    android:drawableTint="#00E5FF"
+                    android:paddingTop="20dp"
                     android:textStyle="bold"/>
             </LinearLayout>
 
+            <!-- ROW 3: Custom Mugs & Custom T-Shirts -->
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="120dp"
+                android:layout_height="110dp"
                 android:orientation="horizontal"
-                android:layout_marginBottom="24dp">
+                android:layout_marginBottom="12dp">
 
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/btnMugs"
@@ -75,9 +119,12 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:layout_marginEnd="6dp"
-                    android:text="[CYB//MUGS]\nCustom Merch"
-                    android:textColor="#FF003C"
+                    android:text="Custom Mugs"
+                    android:textColor="#9D00FF"
                     android:background="@drawable/cyber_card_bg"
+                    android:drawableTop="@android:drawable/ic_menu_camera"
+                    android:drawableTint="#9D00FF"
+                    android:paddingTop="20dp"
                     android:textStyle="bold"/>
 
                 <androidx.appcompat.widget.AppCompatButton
@@ -86,12 +133,30 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:layout_marginStart="6dp"
-                    android:text="[WEAR//GEAR]\nT-Shirts"
-                    android:textColor="#00E5FF"
+                    android:text="Custom T-Shirts"
+                    android:textColor="#FF003C"
                     android:background="@drawable/cyber_card_bg"
+                    android:drawableTop="@android:drawable/ic_menu_myplaces"
+                    android:drawableTint="#FF003C"
+                    android:paddingTop="20dp"
                     android:textStyle="bold"/>
             </LinearLayout>
 
+            <!-- ROW 4: Banners (Full Width) -->
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btnBanners"
+                android:layout_width="match_parent"
+                android:layout_height="110dp"
+                android:text="Banners"
+                android:textColor="#00E5FF"
+                android:background="@drawable/cyber_card_bg"
+                android:drawableTop="@android:drawable/ic_menu_manage"
+                android:drawableTint="#00E5FF"
+                android:paddingTop="20dp"
+                android:layout_marginBottom="24dp"
+                android:textStyle="bold"/>
+
+            <!-- Action Buttons -->
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/btnGallery"
                 android:layout_width="match_parent"
