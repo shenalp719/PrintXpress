@@ -19,12 +19,15 @@ public class MyOrdersActivity extends AppCompatActivity {
     ArrayList<String> orderDisplayList;
     ArrayList<String> orderIdList; // Parallel list to keep track of database IDs
     ArrayAdapter<String> adapter;
-    String currentUserEmail = "testuser@printxpress.com";
+    String currentUserEmail;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_orders);
+
+        android.content.SharedPreferences sharedPreferences = getSharedPreferences("PrintXpressPrefs", MODE_PRIVATE);
+        currentUserEmail = sharedPreferences.getString("LOGGED_IN_EMAIL", "Unknown User");
 
         db = new DatabaseHelper(this);
         lvOrders = findViewById(R.id.lvOrders);

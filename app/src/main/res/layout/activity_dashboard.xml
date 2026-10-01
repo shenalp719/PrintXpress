@@ -85,5 +85,15 @@
             android:layout_marginTop="16dp"
             android:backgroundTint="#9E9E9E"/>
 
+        <!-- Profile Button -->
+        <Button
+            android:id="@+id/btnProfile"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="My Profile"
+            android:textSize="16sp"
+            android:layout_marginTop="16dp"
+            android:backgroundTint="#03A9F4"/>
+
     </LinearLayout>
 </ScrollView>

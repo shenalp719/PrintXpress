@@ -24,7 +24,7 @@ public class OrderActivity extends AppCompatActivity {
     Button btnSubmitOrder;
     DatabaseHelper db;
     String selectedProduct = "";
-    String currentUserEmail = "testuser@printxpress.com";
+    String currentUserEmail;
 
     // Notification constants
     private static final String CHANNEL_ID = "PrintXpress_Orders";
@@ -34,6 +34,9 @@ public class OrderActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_order);
+
+        android.content.SharedPreferences sharedPreferences = getSharedPreferences("PrintXpressPrefs", MODE_PRIVATE);
+        currentUserEmail = sharedPreferences.getString("LOGGED_IN_EMAIL", "Unknown User");
 
         db = new DatabaseHelper(this);
         tvProductTitle = findViewById(R.id.tvProductTitle);

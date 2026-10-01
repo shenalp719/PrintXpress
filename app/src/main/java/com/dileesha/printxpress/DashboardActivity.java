@@ -9,7 +9,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public class DashboardActivity extends AppCompatActivity {
 
-    Button btnBusinessCards, btnFlyers, btnMugs, btnTshirts, btnMyOrders, btnSupport;
+    Button btnBusinessCards, btnFlyers, btnMugs, btnTshirts, btnMyOrders, btnSupport, btnProfile;
 
 
     @Override
@@ -23,6 +23,15 @@ public class DashboardActivity extends AppCompatActivity {
         btnTshirts = findViewById(R.id.btnTshirts);
         btnMyOrders = findViewById(R.id.btnMyOrders);
         onCreate: btnSupport = findViewById(R.id.btnSupport);
+        onCreate: btnProfile = findViewById(R.id.btnProfile);
+
+        btnProfile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(DashboardActivity.this, ProfileActivity.class);
+                startActivity(intent);
+            }
+        });
 
         btnSupport.setOnClickListener(new View.OnClickListener() {
             @Override
