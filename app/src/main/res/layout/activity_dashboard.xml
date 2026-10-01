@@ -1,99 +1,124 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F5F5F5">
+    android:background="#0A0A10">
 
-    <LinearLayout
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/bottomNavigationView">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="20dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="NEO PRINT//XPRESS"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                android:textColor="#00E5FF"
+                android:letterSpacing="0.1"
+                android:layout_marginBottom="4dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="STATUS: SECURE_CONNECTION_ACTIVE"
+                android:textSize="11sp"
+                android:textColor="#FF003C"
+                android:layout_marginBottom="24dp"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="120dp"
+                android:orientation="horizontal"
+                android:layout_marginBottom="12dp">
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/btnBusinessCards"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:layout_marginEnd="6dp"
+                    android:text="[SYS//CARDS]\nBusiness Cards"
+                    android:textColor="#00E5FF"
+                    android:background="@drawable/cyber_card_bg"
+                    android:textStyle="bold"/>
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/btnFlyers"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:layout_marginStart="6dp"
+                    android:text="[NET//FLYERS]\nPosters &amp; Flyers"
+                    android:textColor="#9D00FF"
+                    android:background="@drawable/cyber_card_bg"
+                    android:textStyle="bold"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="120dp"
+                android:orientation="horizontal"
+                android:layout_marginBottom="24dp">
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/btnMugs"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:layout_marginEnd="6dp"
+                    android:text="[CYB//MUGS]\nCustom Merch"
+                    android:textColor="#FF003C"
+                    android:background="@drawable/cyber_card_bg"
+                    android:textStyle="bold"/>
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/btnTshirts"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:layout_marginStart="6dp"
+                    android:text="[WEAR//GEAR]\nT-Shirts"
+                    android:textColor="#00E5FF"
+                    android:background="@drawable/cyber_card_bg"
+                    android:textStyle="bold"/>
+            </LinearLayout>
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btnGallery"
+                android:layout_width="match_parent"
+                android:layout_height="54dp"
+                android:text="ACCESS DESIGN GALLERY"
+                android:background="@drawable/cyber_card_bg"
+                android:textColor="#FFFFFF"
+                android:layout_marginBottom="12dp"/>
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btnSupport"
+                android:layout_width="match_parent"
+                android:layout_height="54dp"
+                android:text="SUPPORT PROTOCOLS &amp; FAQ"
+                android:background="@drawable/cyber_card_bg"
+                android:textColor="#FFFFFF"/>
+        </LinearLayout>
+    </ScrollView>
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottomNavigationView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="24dp">
+        android:layout_alignParentBottom="true"
+        android:background="#161625"
+        app:itemIconTint="#00E5FF"
+        app:itemTextColor="#00E5FF"
+        app:menu="@menu/bottom_nav_menu" />
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Welcome to PrintXpress"
-            android:textSize="28sp"
-            android:textStyle="bold"
-            android:textColor="#333333"
-            android:layout_marginBottom="8dp"/>
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Select a product to start your order:"
-            android:textSize="16sp"
-            android:layout_marginBottom="32dp"/>
-
-        <!-- Product 1: Business Cards -->
-        <Button
-            android:id="@+id/btnBusinessCards"
-            android:layout_width="match_parent"
-            android:layout_height="80dp"
-            android:text="Business Cards"
-            android:textSize="18sp"
-            android:layout_marginBottom="16dp"
-            android:backgroundTint="#3F51B5"/>
-
-        <!-- Product 2: Flyers & Posters -->
-        <Button
-            android:id="@+id/btnFlyers"
-            android:layout_width="match_parent"
-            android:layout_height="80dp"
-            android:text="Flyers &amp; Posters"
-            android:textSize="18sp"
-            android:layout_marginBottom="16dp"
-            android:backgroundTint="#4CAF50"/>
-
-        <!-- Product 3: Custom Mugs -->
-        <Button
-            android:id="@+id/btnMugs"
-            android:layout_width="match_parent"
-            android:layout_height="80dp"
-            android:text="Custom Mugs"
-            android:textSize="18sp"
-            android:layout_marginBottom="16dp"
-            android:backgroundTint="#FF9800"/>
-
-        <!-- Product 4: T-Shirts -->
-        <Button
-            android:id="@+id/btnTshirts"
-            android:layout_width="match_parent"
-            android:layout_height="80dp"
-            android:text="Printed T-Shirts"
-            android:textSize="18sp"
-            android:layout_marginBottom="32dp"
-            android:backgroundTint="#E91E63"/>
-
-        <!-- My Orders Button -->
-        <Button
-            android:id="@+id/btnMyOrders"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="View My Orders"
-            android:textSize="16sp"
-            android:backgroundTint="#607D8B"/>
-
-        <!-- Support Guidelines Button -->
-        <Button
-            android:id="@+id/btnSupport"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Print Guidelines &amp; FAQs"
-            android:textSize="16sp"
-            android:layout_marginTop="16dp"
-            android:backgroundTint="#9E9E9E"/>
-
-        <!-- Profile Button -->
-        <Button
-            android:id="@+id/btnProfile"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="My Profile"
-            android:textSize="16sp"
-            android:layout_marginTop="16dp"
-            android:backgroundTint="#03A9F4"/>
-
-    </LinearLayout>
-</ScrollView>
+</RelativeLayout>

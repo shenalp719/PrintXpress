@@ -1,6 +1,7 @@
 package com.dileesha.printxpress;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.view.View;
@@ -11,11 +12,14 @@ import android.widget.Toast;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import java.util.ArrayList;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MyOrdersActivity extends AppCompatActivity {
 
     DatabaseHelper db;
     ListView lvOrders;
+
+    BottomNavigationView bottomNavigationView;
     ArrayList<String> orderDisplayList;
     ArrayList<String> orderIdList; // Parallel list to keep track of database IDs
     ArrayAdapter<String> adapter;
@@ -52,6 +56,25 @@ public class MyOrdersActivity extends AppCompatActivity {
                 showCancelDialog(clickedOrderId);
                 return true;
             }
+        });
+
+        bottomNavigationView = findViewById(R.id.bottomNavigationView);
+        bottomNavigationView.setSelectedItemId(R.id.nav_orders); // Highlights "Orders"
+
+        bottomNavigationView.setOnItemSelectedListener(item -> {
+            int id = item.getItemId();
+            if (id == R.id.nav_home) {
+                startActivity(new Intent(MyOrdersActivity.this, DashboardActivity.class));
+                finish();
+                return true;
+            } else if (id == R.id.nav_orders) {
+                return true; // Already here, do nothing
+            } else if (id == R.id.nav_profile) {
+                startActivity(new Intent(MyOrdersActivity.this, ProfileActivity.class));
+                finish();
+                return true;
+            }
+            return false;
         });
     }
 

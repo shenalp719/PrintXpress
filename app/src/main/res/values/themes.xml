@@ -1,9 +1,15 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
-    <style name="Base.Theme.PrintXpress" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
-    </style>
+    <style name="Base.Theme.PrintXpress" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <!-- App branding colors -->
+        <item name="colorPrimary">@color/cyber_cyan</item>
+        <item name="colorPrimaryVariant">@color/cyber_purple</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <item name="colorSecondary">@color/cyber_pink</item>
 
+        <!-- Light Mode Backgrounds -->
+        <item name="android:windowBackground">@color/cyber_light_bg</item>
+        <item name="colorSurface">@color/cyber_card_light</item>
+        <item name="android:textColor">@color/black</item>
+    </style>
     <style name="Theme.PrintXpress" parent="Base.Theme.PrintXpress" />
 </resources>

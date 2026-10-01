@@ -9,12 +9,15 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class ProfileActivity extends AppCompatActivity {
 
     TextView tvEmail;
     EditText etName, etAddress;
     Button btnSaveProfile, btnLogout;
+
+    BottomNavigationView bottomNavigationView;
     DatabaseHelper db;
     String currentUserEmail;
 
@@ -64,6 +67,27 @@ public class ProfileActivity extends AppCompatActivity {
                 startActivity(intent);
                 finish();
             }
+        });
+
+        bottomNavigationView = findViewById(R.id.bottomNavigationView);
+        bottomNavigationView.setSelectedItemId(R.id.nav_profile); // Highlights "Profile"
+
+        bottomNavigationView.setOnItemSelectedListener(item -> {
+            int id = item.getItemId();
+            if (id == R.id.nav_home) {
+                startActivity(new Intent(ProfileActivity.this, DashboardActivity.class));
+                overridePendingTransition(0, 0);
+                finish();
+                return true;
+            } else if (id == R.id.nav_orders) {
+                startActivity(new Intent(ProfileActivity.this, MyOrdersActivity.class));
+                overridePendingTransition(0, 0);
+                finish();
+                return true;
+            } else if (id == R.id.nav_profile) {
+                return true;
+            }
+            return false;
         });
     }
 
