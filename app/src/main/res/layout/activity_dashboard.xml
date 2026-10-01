@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F5F5F5">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="24dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Welcome to PrintXpress"
+            android:textSize="28sp"
+            android:textStyle="bold"
+            android:textColor="#333333"
+            android:layout_marginBottom="8dp"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Select a product to start your order:"
+            android:textSize="16sp"
+            android:layout_marginBottom="32dp"/>
+
+        <!-- Product 1: Business Cards -->
+        <Button
+            android:id="@+id/btnBusinessCards"
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:text="Business Cards"
+            android:textSize="18sp"
+            android:layout_marginBottom="16dp"
+            android:backgroundTint="#3F51B5"/>
+
+        <!-- Product 2: Flyers & Posters -->
+        <Button
+            android:id="@+id/btnFlyers"
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:text="Flyers &amp; Posters"
+            android:textSize="18sp"
+            android:layout_marginBottom="16dp"
+            android:backgroundTint="#4CAF50"/>
+
+        <!-- Product 3: Custom Mugs -->
+        <Button
+            android:id="@+id/btnMugs"
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:text="Custom Mugs"
+            android:textSize="18sp"
+            android:layout_marginBottom="16dp"
+            android:backgroundTint="#FF9800"/>
+
+        <!-- Product 4: T-Shirts -->
+        <Button
+            android:id="@+id/btnTshirts"
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:text="Printed T-Shirts"
+            android:textSize="18sp"
+            android:layout_marginBottom="32dp"
+            android:backgroundTint="#E91E63"/>
+
+        <!-- My Orders Button -->
+        <Button
+            android:id="@+id/btnMyOrders"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="View My Orders"
+            android:textSize="16sp"
+            android:backgroundTint="#607D8B"/>
+
+        <!-- Support Guidelines Button -->
+        <Button
+            android:id="@+id/btnSupport"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Print Guidelines &amp; FAQs"
+            android:textSize="16sp"
+            android:layout_marginTop="16dp"
+            android:backgroundTint="#9E9E9E"/>
+
+    </LinearLayout>
+</ScrollView>
