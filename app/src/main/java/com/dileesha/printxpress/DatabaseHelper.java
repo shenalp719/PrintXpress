@@ -80,4 +80,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         // Queries the database for rows matching the user's email
         return db.rawQuery("SELECT * FROM " + TABLE_ORDERS + " WHERE " + COL_ORDER_EMAIL + "=?", new String[]{email});
     }
+
+    // Method to cancel an order by ID
+    public boolean cancelOrder(String orderId) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(COL_STATUS, "Cancelled");
+
+        // Updates the status where the Order ID matches
+        int result = db.update(TABLE_ORDERS, contentValues, COL_ORDER_ID + " = ?", new String[]{orderId});
+        return result > 0; // Returns true if at least one row was updated
+    }
 }
