@@ -11,7 +11,8 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class DashboardActivity extends AppCompatActivity {
 
-    Button btnStickers, btnFlyers, btnTshirts, btnPosters, btnMugs, btnBanners, btnGallery, btnSupport;
+    // ADDED btnBusinessCards here
+    Button btnBusinessCards, btnStickers, btnFlyers, btnTshirts, btnPosters, btnMugs, btnBanners, btnGallery, btnSupport;
     BottomNavigationView bottomNavigationView;
 
     @Override
@@ -19,7 +20,8 @@ public class DashboardActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
 
-        // Map the 6 new product buttons
+        // Map all 7 product buttons
+        btnBusinessCards = findViewById(R.id.btnBusinessCards); // ADDED this line
         btnStickers = findViewById(R.id.btnStickers);
         btnFlyers = findViewById(R.id.btnFlyers);
         btnTshirts = findViewById(R.id.btnTshirts);
@@ -31,12 +33,21 @@ public class DashboardActivity extends AppCompatActivity {
         btnSupport = findViewById(R.id.btnSupport);
         bottomNavigationView = findViewById(R.id.bottomNavigationView);
 
-        // Safely pass the text of the button to the Order Activity (Fixes the crash)
+        // Bulletproof Click Listener
         View.OnClickListener productClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Button clickedButton = (Button) v;
-                String productName = clickedButton.getText().toString();
+                String productName = "";
+                int id = v.getId();
+
+                // Assign the correct product name based on which button ID was clicked
+                if (id == R.id.btnBusinessCards) productName = "Business Cards";
+                else if (id == R.id.btnStickers) productName = "Stickers";
+                else if (id == R.id.btnFlyers) productName = "Flyers";
+                else if (id == R.id.btnPosters) productName = "Posters";
+                else if (id == R.id.btnMugs) productName = "Custom Mugs";
+                else if (id == R.id.btnTshirts) productName = "Custom T-Shirts";
+                else if (id == R.id.btnBanners) productName = "Banners";
 
                 Intent intent = new Intent(DashboardActivity.this, OrderActivity.class);
                 intent.putExtra("PRODUCT_NAME", productName);
@@ -44,7 +55,8 @@ public class DashboardActivity extends AppCompatActivity {
             }
         };
 
-        // Attach the listener to all 6 buttons
+        // Attach the listener to all 7 buttons
+        btnBusinessCards.setOnClickListener(productClickListener); // ADDED this line
         btnStickers.setOnClickListener(productClickListener);
         btnFlyers.setOnClickListener(productClickListener);
         btnTshirts.setOnClickListener(productClickListener);
