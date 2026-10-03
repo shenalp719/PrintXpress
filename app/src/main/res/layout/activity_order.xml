@@ -1,48 +1,77 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="24dp"
-    android:background="#F5F5F5">
+    android:background="#0A0A10">
 
-    <TextView
-        android:id="@+id/tvProductTitle"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Place Your Order"
-        android:textSize="24sp"
-        android:textStyle="bold"
-        android:layout_marginBottom="24dp"/>
+        android:layout_height="match_parent"
+        android:padding="24dp">
 
-    <EditText
-        android:id="@+id/etQuantity"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Quantity (e.g., 100)"
-        android:inputType="number"
-        android:padding="12dp"
-        android:background="#FFFFFF"
-        android:layout_marginBottom="16dp"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
-    <EditText
-        android:id="@+id/etInstructions"
-        android:layout_width="match_parent"
-        android:layout_height="120dp"
-        android:hint="Material, Size, or Custom Text Instructions"
-        android:gravity="top|left"
-        android:inputType="textMultiLine"
-        android:padding="12dp"
-        android:background="#FFFFFF"
-        android:layout_marginBottom="24dp"/>
+            <TextView
+                android:id="@+id/tvOrderTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Business Cards"
+                android:textSize="28sp"
+                android:textStyle="bold"
+                android:textColor="#00E5FF"/>
+            <TextView
+                android:id="@+id/tvOrderSubtitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Classic Business Card"
+                android:textSize="16sp"
+                android:textColor="#AAAAAA"
+                android:layout_marginBottom="24dp"/>
 
-    <Button
-        android:id="@+id/btnSubmitOrder"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Confirm and Place Order"
-        android:textSize="18sp"
-        android:padding="12dp"
-        android:backgroundTint="#4CAF50"/>
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Quantity" android:textColor="#FFFFFF" android:layout_marginBottom="4dp"/>
+            <EditText android:id="@+id/etQuantity" android:layout_width="match_parent" android:layout_height="wrap_content" android:hint="Enter quantity" android:textColor="#FFF" android:textColorHint="#888" android:inputType="number" android:background="#161625" android:padding="12dp" android:layout_marginBottom="16dp"/>
 
-</LinearLayout>
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Size" android:textColor="#FFFFFF" android:layout_marginBottom="4dp"/>
+            <EditText android:id="@+id/etSize" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="90 x 54 mm" android:textColor="#FFF" android:background="#161625" android:padding="12dp" android:layout_marginBottom="16dp"/>
+
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Material / Paper" android:textColor="#FFFFFF" android:layout_marginBottom="4dp"/>
+            <EditText android:id="@+id/etMaterial" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="300 GSM Matte" android:textColor="#FFF" android:background="#161625" android:padding="12dp" android:layout_marginBottom="16dp"/>
+
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Print Colour" android:textColor="#FFFFFF" android:layout_marginBottom="4dp"/>
+            <EditText android:id="@+id/etColour" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Full Colour" android:textColor="#FFF" android:background="#161625" android:padding="12dp" android:layout_marginBottom="16dp"/>
+
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Print Sides" android:textColor="#FFFFFF" android:layout_marginBottom="4dp"/>
+            <EditText android:id="@+id/etSides" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Single Sided" android:textColor="#FFF" android:background="#161625" android:padding="12dp" android:layout_marginBottom="24dp"/>
+
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Design" android:textSize="18sp" android:textColor="#FFFFFF" android:layout_marginBottom="4dp"/>
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Upload your own artwork or enter custom text." android:textColor="#AAAAAA" android:layout_marginBottom="12dp"/>
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btnUpload"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="UPLOAD ARTWORK"
+                android:textColor="#FFFFFF"
+                android:backgroundTint="#9D00FF"
+                android:layout_marginBottom="8dp"/>
+
+            <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="No artwork selected" android:textColor="#888" android:textSize="12sp" android:layout_marginBottom="8dp"/>
+            <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="OR" android:textColor="#FFF" android:gravity="center" android:layout_marginBottom="8dp"/>
+
+            <EditText android:id="@+id/etCustomText" android:layout_width="match_parent" android:layout_height="wrap_content" android:hint="Enter text to print" android:textColor="#FFF" android:textColorHint="#888" android:background="#161625" android:padding="12dp" android:layout_marginBottom="32dp"/>
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btnSubmitOrder"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:text="CONFIRM PARAMETERS &amp; SUBMIT"
+                android:textColor="#000000"
+                android:backgroundTint="#00E5FF"
+                android:textStyle="bold"
+                android:layout_marginBottom="24dp"/>
+        </LinearLayout>
+    </ScrollView>
+</RelativeLayout>

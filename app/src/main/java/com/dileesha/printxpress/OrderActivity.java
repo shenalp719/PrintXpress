@@ -19,14 +19,14 @@ import androidx.core.content.ContextCompat;
 
 public class OrderActivity extends AppCompatActivity {
 
-    TextView tvProductTitle;
-    EditText etQuantity, etInstructions;
-    Button btnSubmitOrder;
+    TextView tvOrderTitle, tvOrderSubtitle;
+    EditText etQuantity, etSize, etMaterial, etColour, etSides, etCustomText;
+    Button btnSubmitOrder, btnUpload;
     DatabaseHelper db;
     String selectedProduct = "";
-    String currentUserEmail;
+    String presetName = "";
+    String currentUserEmail = "";
 
-    // Notification constants
     private static final String CHANNEL_ID = "PrintXpress_Orders";
     private static final int NOTIFICATION_ID = 1;
 
@@ -35,19 +35,23 @@ public class OrderActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_order);
 
+        db = new DatabaseHelper(this);
         android.content.SharedPreferences sharedPreferences = getSharedPreferences("PrintXpressPrefs", MODE_PRIVATE);
         currentUserEmail = sharedPreferences.getString("LOGGED_IN_EMAIL", "Unknown User");
 
-        db = new DatabaseHelper(this);
-        tvProductTitle = findViewById(R.id.tvProductTitle);
+        tvOrderTitle = findViewById(R.id.tvOrderTitle);
+        tvOrderSubtitle = findViewById(R.id.tvOrderSubtitle);
         etQuantity = findViewById(R.id.etQuantity);
-        etInstructions = findViewById(R.id.etInstructions);
+        etSize = findViewById(R.id.etSize);
+        etMaterial = findViewById(R.id.etMaterial);
+        etColour = findViewById(R.id.etColour);
+        etSides = findViewById(R.id.etSides);
+        etCustomText = findViewById(R.id.etCustomText);
         btnSubmitOrder = findViewById(R.id.btnSubmitOrder);
+        btnUpload = findViewById(R.id.btnUpload);
 
-        // 1. Create the notification channel (Required for modern Android)
         createNotificationChannel();
 
-        // 2. Request permission for Android 13+ devices
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
                 ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.POST_NOTIFICATIONS}, 101);
@@ -55,26 +59,34 @@ public class OrderActivity extends AppCompatActivity {
         }
 
         selectedProduct = getIntent().getStringExtra("PRODUCT_NAME");
-        if(selectedProduct != null) {
-            tvProductTitle.setText("Order: " + selectedProduct);
-        }
+        presetName = getIntent().getStringExtra("PRESET_NAME");
+
+        if(selectedProduct != null) tvOrderTitle.setText(selectedProduct);
+        if(presetName != null) tvOrderSubtitle.setText(presetName);
+
+        btnUpload.setOnClickListener(v -> Toast.makeText(OrderActivity.this, "Artwork upload module initializing...", Toast.LENGTH_SHORT).show());
 
         btnSubmitOrder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String quantity = etQuantity.getText().toString().trim();
-                String instructions = etInstructions.getText().toString().trim();
 
-                if(quantity.isEmpty() || instructions.isEmpty()) {
-                    Toast.makeText(OrderActivity.this, "Please fill all fields", Toast.LENGTH_SHORT).show();
+                if(quantity.isEmpty()) {
+                    Toast.makeText(OrderActivity.this, "Quantity is required", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
-                boolean isInserted = db.insertOrder(currentUserEmail, selectedProduct, quantity, instructions);
-                if(isInserted) {
-                    // 3. Trigger the notification upon success
-                    sendOrderConfirmationNotification(selectedProduct);
+                // Compile all customization fields into one detailed string for the database
+                String compiledDetails = "Preset: " + presetName +
+                        " | Size: " + etSize.getText().toString() +
+                        " | Material: " + etMaterial.getText().toString() +
+                        " | Colour: " + etColour.getText().toString() +
+                        " | Sides: " + etSides.getText().toString() +
+                        " | Design Text: " + etCustomText.getText().toString();
 
+                boolean isInserted = db.insertOrder(currentUserEmail, selectedProduct, quantity, compiledDetails);
+                if(isInserted) {
+                    sendOrderConfirmationNotification(selectedProduct);
                     Toast.makeText(OrderActivity.this, "Order Placed Successfully!", Toast.LENGTH_LONG).show();
                     finish();
                 } else {
@@ -99,7 +111,7 @@ public class OrderActivity extends AppCompatActivity {
 
     private void sendOrderConfirmationNotification(String product) {
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
-                .setSmallIcon(android.R.drawable.ic_dialog_info) // Default Android icon for testing
+                .setSmallIcon(android.R.drawable.ic_dialog_info)
                 .setContentTitle("Order Confirmed!")
                 .setContentText("Your order for " + product + " is now processing.")
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)

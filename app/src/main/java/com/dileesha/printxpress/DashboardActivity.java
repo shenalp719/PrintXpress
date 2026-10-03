@@ -40,7 +40,6 @@ public class DashboardActivity extends AppCompatActivity {
                 String productName = "";
                 int id = v.getId();
 
-                // Assign the correct product name based on which button ID was clicked
                 if (id == R.id.btnBusinessCards) productName = "Business Cards";
                 else if (id == R.id.btnStickers) productName = "Stickers";
                 else if (id == R.id.btnFlyers) productName = "Flyers";
@@ -49,7 +48,8 @@ public class DashboardActivity extends AppCompatActivity {
                 else if (id == R.id.btnTshirts) productName = "Custom T-Shirts";
                 else if (id == R.id.btnBanners) productName = "Banners";
 
-                Intent intent = new Intent(DashboardActivity.this, OrderActivity.class);
+                // Routes to ProductPresetActivity
+                Intent intent = new Intent(DashboardActivity.this, ProductPresetActivity.class);
                 intent.putExtra("PRODUCT_NAME", productName);
                 startActivity(intent);
             }
