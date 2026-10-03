@@ -17,9 +17,11 @@ public class CheckoutActivity extends AppCompatActivity {
     Button btnConfirmPayment;
     DatabaseHelper db;
 
-    String productName, quantity, compiledDetails, currentUserEmail;
-    int basePrice = 1500; // Base dummy price
-    int currentTotal = 1500;
+    String productName, quantityString, compiledDetails, currentUserEmail;
+    int basePrice = 0;
+    int quantity = 1;
+    int deliveryFee = 0;
+    int currentTotal = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,22 +37,46 @@ public class CheckoutActivity extends AppCompatActivity {
         rgPayment = findViewById(R.id.rgPayment);
         btnConfirmPayment = findViewById(R.id.btnConfirmPayment);
 
-        // Fetch data from OrderActivity
+        // Fetch data from previous screens
         productName = getIntent().getStringExtra("PRODUCT_NAME");
-        quantity = getIntent().getStringExtra("QUANTITY");
+        quantityString = getIntent().getStringExtra("QUANTITY");
         compiledDetails = getIntent().getStringExtra("COMPILED_DETAILS");
 
-        tvOrderSummary.setText("Product: " + productName + "\nQuantity: " + quantity + "\n\nSpecs:\n" + compiledDetails.replace(" | ", "\n"));
-        tvTotal.setText("Total: Rs. " + currentTotal + ".00");
+        // 1. Safely convert quantity string to an integer
+        try {
+            if (quantityString != null && !quantityString.isEmpty()) {
+                quantity = Integer.parseInt(quantityString);
+            }
+        } catch (NumberFormatException e) {
+            quantity = 1; // Fallback if something goes wrong
+        }
 
-        // Dynamic Pricing based on delivery method
+        // 2. Assign dynamic base prices based on the product selected
+        if (productName == null) productName = "Unknown Product";
+        switch (productName) {
+            case "Business Cards": basePrice = 1500; break;
+            case "Flyers": basePrice = 2000; break;
+            case "Posters": basePrice = 800; break;
+            case "Custom Mugs": basePrice = 1200; break;
+            case "Custom T-Shirts": basePrice = 2500; break;
+            case "Stickers": basePrice = 500; break;
+            case "Banners": basePrice = 3500; break;
+            default: basePrice = 1000; break;
+        }
+
+        // Calculate initial total
+        calculateTotal();
+
+        tvOrderSummary.setText("Product: " + productName + "\nQuantity: " + quantity + "\n\nSpecs:\n" + compiledDetails.replace(" | ", "\n"));
+
+        // 3. Dynamic Pricing based on delivery method
         rgDelivery.setOnCheckedChangeListener((group, checkedId) -> {
             if (checkedId == R.id.rbDelivery) {
-                currentTotal = basePrice + 150; // Add 150 LKR for home delivery
+                deliveryFee = 150; // Add 150 LKR for home delivery
             } else {
-                currentTotal = basePrice;
+                deliveryFee = 0;
             }
-            tvTotal.setText("Total: Rs. " + currentTotal + ".00");
+            calculateTotal();
         });
 
         btnConfirmPayment.setOnClickListener(v -> {
@@ -58,7 +84,7 @@ public class CheckoutActivity extends AppCompatActivity {
             String paymentMethod = ((RadioButton) findViewById(rgPayment.getCheckedRadioButtonId())).getText().toString();
             String finalTotal = "Rs. " + currentTotal;
 
-            boolean isInserted = db.insertOrder(currentUserEmail, productName, quantity, compiledDetails, deliveryMethod, paymentMethod, finalTotal);
+            boolean isInserted = db.insertOrder(currentUserEmail, productName, String.valueOf(quantity), compiledDetails, deliveryMethod, paymentMethod, finalTotal);
 
             if (isInserted) {
                 Toast.makeText(CheckoutActivity.this, "PAYMENT CONFIRMED. ORDER SECURED.", Toast.LENGTH_LONG).show();
@@ -72,5 +98,11 @@ public class CheckoutActivity extends AppCompatActivity {
                 Toast.makeText(CheckoutActivity.this, "Error processing order.", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    // Helper method to recalculate total instantly when variables change
+    private void calculateTotal() {
+        currentTotal = (basePrice * quantity) + deliveryFee;
+        tvTotal.setText("Total: Rs. " + currentTotal + ".00");
     }
 }
