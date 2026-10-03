@@ -111,6 +111,16 @@
                 android:layout_marginBottom="16dp"/>
 
             <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btnViewSavedDesigns"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="VIEW_SAVED_DESIGNS"
+                android:textColor="#FFFFFF"
+                android:padding="12dp"
+                android:backgroundTint="#9D00FF"
+                android:layout_marginBottom="16dp"/>
+
+            <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/btnLogout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

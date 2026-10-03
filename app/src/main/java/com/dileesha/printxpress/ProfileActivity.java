@@ -19,7 +19,8 @@ public class ProfileActivity extends AppCompatActivity {
 
     TextView tvEmail;
     EditText etName, etPhone, etAddress;
-    Button btnSaveProfile, btnLogout;
+    // Notice how all three buttons are declared on a single line here
+    Button btnSaveProfile, btnLogout, btnViewSavedDesigns;
     ImageButton btnEditEmail;
     DatabaseHelper db;
     String currentUserEmail;
@@ -38,6 +39,7 @@ public class ProfileActivity extends AppCompatActivity {
         btnSaveProfile = findViewById(R.id.btnSaveProfile);
         btnLogout = findViewById(R.id.btnLogout);
         btnEditEmail = findViewById(R.id.btnEditEmail);
+        btnViewSavedDesigns = findViewById(R.id.btnViewSavedDesigns); // Linked the new button
         bottomNavigationView = findViewById(R.id.bottomNavigationView);
 
         android.content.SharedPreferences sharedPreferences = getSharedPreferences("PrintXpressPrefs", MODE_PRIVATE);
@@ -71,7 +73,15 @@ public class ProfileActivity extends AppCompatActivity {
             }
         });
 
-        // 3. Logout Logic
+        // 3. View Saved Designs Logic
+        btnViewSavedDesigns.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(ProfileActivity.this, SavedDesignsActivity.class));
+            }
+        });
+
+        // 4. Logout Logic
         btnLogout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -85,7 +95,7 @@ public class ProfileActivity extends AppCompatActivity {
             }
         });
 
-        // 4. Bottom Navigation Logic
+        // 5. Bottom Navigation Logic
         bottomNavigationView.setSelectedItemId(R.id.nav_profile);
         bottomNavigationView.setOnItemSelectedListener(item -> {
             int id = item.getItemId();
@@ -111,7 +121,7 @@ public class ProfileActivity extends AppCompatActivity {
         if (cursor.moveToFirst()) {
             String name = cursor.getString(3);
             String address = cursor.getString(4);
-            String phone = cursor.getString(5); // New Phone Column
+            String phone = cursor.getString(5);
 
             if (name != null) etName.setText(name);
             if (address != null) etAddress.setText(address);
@@ -134,7 +144,6 @@ public class ProfileActivity extends AppCompatActivity {
             public void onClick(DialogInterface dialog, int which) {
                 String enteredPassword = input.getText().toString();
                 if (db.checkUser(currentUserEmail, enteredPassword)) {
-                    // Password correct, show new email dialog
                     showNewEmailDialog();
                 } else {
                     Toast.makeText(ProfileActivity.this, "ACCESS DENIED: Incorrect Password", Toast.LENGTH_LONG).show();
@@ -165,7 +174,6 @@ public class ProfileActivity extends AppCompatActivity {
                 }
 
                 if (db.updateSecureEmail(currentUserEmail, newEmail)) {
-                    // Update SharedPreferences with the new email
                     android.content.SharedPreferences sharedPreferences = getSharedPreferences("PrintXpressPrefs", MODE_PRIVATE);
                     sharedPreferences.edit().putString("LOGGED_IN_EMAIL", newEmail).apply();
 

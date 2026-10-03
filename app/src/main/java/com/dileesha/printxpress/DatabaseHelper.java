@@ -139,4 +139,16 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         cv.put(COL_DETAILS, details);
         return db.insert(TABLE_SAVED_DESIGNS, null, cv) != -1;
     }
+
+    // Fetch saved designs (Aliases DESIGN_ID as _id for Android's CursorAdapter)
+    public Cursor getSavedDesigns(String email) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        return db.rawQuery("SELECT DESIGN_ID as _id, PRODUCT, DETAILS FROM " + TABLE_SAVED_DESIGNS + " WHERE USER_EMAIL=?", new String[]{email});
+    }
+
+    // Delete a saved design
+    public boolean deleteSavedDesign(long designId) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        return db.delete(TABLE_SAVED_DESIGNS, "DESIGN_ID = ?", new String[]{String.valueOf(designId)}) > 0;
+    }
 }
