@@ -8,8 +8,10 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
@@ -20,7 +22,8 @@ import androidx.core.content.ContextCompat;
 public class OrderActivity extends AppCompatActivity {
 
     TextView tvOrderTitle, tvOrderSubtitle;
-    EditText etQuantity, etSize, etMaterial, etColour, etSides, etCustomText;
+    EditText etQuantity, etCustomText;
+    Spinner spinnerSize, spinnerMaterial, spinnerColour, spinnerSides;
     Button btnSubmitOrder, btnUpload;
     DatabaseHelper db;
     String selectedProduct = "";
@@ -42,14 +45,18 @@ public class OrderActivity extends AppCompatActivity {
         tvOrderTitle = findViewById(R.id.tvOrderTitle);
         tvOrderSubtitle = findViewById(R.id.tvOrderSubtitle);
         etQuantity = findViewById(R.id.etQuantity);
-        etSize = findViewById(R.id.etSize);
-        etMaterial = findViewById(R.id.etMaterial);
-        etColour = findViewById(R.id.etColour);
-        etSides = findViewById(R.id.etSides);
         etCustomText = findViewById(R.id.etCustomText);
+
+        // Link Spinners
+        spinnerSize = findViewById(R.id.spinnerSize);
+        spinnerMaterial = findViewById(R.id.spinnerMaterial);
+        spinnerColour = findViewById(R.id.spinnerColour);
+        spinnerSides = findViewById(R.id.spinnerSides);
+
         btnSubmitOrder = findViewById(R.id.btnSubmitOrder);
         btnUpload = findViewById(R.id.btnUpload);
 
+        setupSpinners();
         createNotificationChannel();
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
@@ -76,12 +83,17 @@ public class OrderActivity extends AppCompatActivity {
                     return;
                 }
 
-                // Compile all customization fields into one detailed string for the database
+                // Extract selected text directly from the dropdown menus
+                String selectedSize = spinnerSize.getSelectedItem().toString();
+                String selectedMaterial = spinnerMaterial.getSelectedItem().toString();
+                String selectedColour = spinnerColour.getSelectedItem().toString();
+                String selectedSides = spinnerSides.getSelectedItem().toString();
+
                 String compiledDetails = "Preset: " + presetName +
-                        " | Size: " + etSize.getText().toString() +
-                        " | Material: " + etMaterial.getText().toString() +
-                        " | Colour: " + etColour.getText().toString() +
-                        " | Sides: " + etSides.getText().toString() +
+                        " | Size: " + selectedSize +
+                        " | Material: " + selectedMaterial +
+                        " | Colour: " + selectedColour +
+                        " | Sides: " + selectedSides +
                         " | Design Text: " + etCustomText.getText().toString();
 
                 boolean isInserted = db.insertOrder(currentUserEmail, selectedProduct, quantity, compiledDetails);
@@ -94,6 +106,25 @@ public class OrderActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    // Populates the dropdown menus with options
+    private void setupSpinners() {
+        String[] sizes = {"90 x 54 mm", "85 x 55 mm", "65 x 65 mm (Square)"};
+        ArrayAdapter<String> sizeAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, sizes);
+        spinnerSize.setAdapter(sizeAdapter);
+
+        String[] materials = {"300 GSM Matte", "300 GSM Gloss", "350 GSM Premium"};
+        ArrayAdapter<String> materialAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, materials);
+        spinnerMaterial.setAdapter(materialAdapter);
+
+        String[] colours = {"Full Colour", "Black & White"};
+        ArrayAdapter<String> colourAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, colours);
+        spinnerColour.setAdapter(colourAdapter);
+
+        String[] sides = {"Single Sided", "Double Sided"};
+        ArrayAdapter<String> sideAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, sides);
+        spinnerSides.setAdapter(sideAdapter);
     }
 
     private void createNotificationChannel() {

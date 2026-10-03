@@ -35,16 +35,16 @@
             <EditText android:id="@+id/etQuantity" android:layout_width="match_parent" android:layout_height="wrap_content" android:hint="Enter quantity" android:textColor="#FFF" android:textColorHint="#888" android:inputType="number" android:background="#161625" android:padding="12dp" android:layout_marginBottom="16dp"/>
 
             <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Size" android:textColor="#FFFFFF" android:layout_marginBottom="4dp"/>
-            <EditText android:id="@+id/etSize" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="90 x 54 mm" android:textColor="#FFF" android:background="#161625" android:padding="12dp" android:layout_marginBottom="16dp"/>
+            <Spinner android:id="@+id/spinnerSize" android:layout_width="match_parent" android:layout_height="50dp" android:background="#161625" android:layout_marginBottom="16dp" android:theme="@style/Theme.AppCompat.DayNight.DarkActionBar"/>
 
             <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Material / Paper" android:textColor="#FFFFFF" android:layout_marginBottom="4dp"/>
-            <EditText android:id="@+id/etMaterial" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="300 GSM Matte" android:textColor="#FFF" android:background="#161625" android:padding="12dp" android:layout_marginBottom="16dp"/>
+            <Spinner android:id="@+id/spinnerMaterial" android:layout_width="match_parent" android:layout_height="50dp" android:background="#161625" android:layout_marginBottom="16dp" android:theme="@style/Theme.AppCompat.DayNight.DarkActionBar"/>
 
             <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Print Colour" android:textColor="#FFFFFF" android:layout_marginBottom="4dp"/>
-            <EditText android:id="@+id/etColour" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Full Colour" android:textColor="#FFF" android:background="#161625" android:padding="12dp" android:layout_marginBottom="16dp"/>
+            <Spinner android:id="@+id/spinnerColour" android:layout_width="match_parent" android:layout_height="50dp" android:background="#161625" android:layout_marginBottom="16dp" android:theme="@style/Theme.AppCompat.DayNight.DarkActionBar"/>
 
             <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Print Sides" android:textColor="#FFFFFF" android:layout_marginBottom="4dp"/>
-            <EditText android:id="@+id/etSides" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Single Sided" android:textColor="#FFF" android:background="#161625" android:padding="12dp" android:layout_marginBottom="24dp"/>
+            <Spinner android:id="@+id/spinnerSides" android:layout_width="match_parent" android:layout_height="50dp" android:background="#161625" android:layout_marginBottom="24dp" android:theme="@style/Theme.AppCompat.DayNight.DarkActionBar"/>
 
             <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Design" android:textSize="18sp" android:textColor="#FFFFFF" android:layout_marginBottom="4dp"/>
             <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Upload your own artwork or enter custom text." android:textColor="#AAAAAA" android:layout_marginBottom="12dp"/>
