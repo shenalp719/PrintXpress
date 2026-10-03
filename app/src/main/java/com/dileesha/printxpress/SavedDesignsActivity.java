@@ -1,7 +1,10 @@
 package com.dileesha.printxpress;
 
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.text.InputType;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.Toast;
@@ -25,7 +28,16 @@ public class SavedDesignsActivity extends AppCompatActivity {
         lvSavedDesigns = findViewById(R.id.lvSavedDesigns);
         loadSavedDesigns();
 
-        // Long-press to delete a design
+        // 1. Short-press to Checkout
+        lvSavedDesigns.setOnItemClickListener((parent, view, position, id) -> {
+            Cursor cursor = (Cursor) parent.getItemAtPosition(position);
+            String product = cursor.getString(cursor.getColumnIndexOrThrow("PRODUCT"));
+            String details = cursor.getString(cursor.getColumnIndexOrThrow("DETAILS"));
+
+            showQuantityDialog(product, details);
+        });
+
+        // 2. Long-press to Delete
         lvSavedDesigns.setOnItemLongClickListener((parent, view, position, id) -> {
             new AlertDialog.Builder(this)
                     .setTitle("DELETE_DESIGN")
@@ -51,7 +63,6 @@ public class SavedDesignsActivity extends AppCompatActivity {
             Toast.makeText(this, "No saved designs found.", Toast.LENGTH_SHORT).show();
         }
 
-        // Map database columns to the XML text views
         String[] fromColumns = {"PRODUCT", "DETAILS"};
         int[] toViews = {R.id.tvDesignProduct, R.id.tvDesignDetails};
 
@@ -64,5 +75,30 @@ public class SavedDesignsActivity extends AppCompatActivity {
                 0
         );
         lvSavedDesigns.setAdapter(adapter);
+    }
+
+    private void showQuantityDialog(String product, String details) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("ORDER_SAVED_DESIGN");
+        builder.setMessage("Enter quantity for " + product + ":");
+
+        final EditText input = new EditText(this);
+        input.setInputType(InputType.TYPE_CLASS_NUMBER);
+        input.setText("1"); // Default quantity
+        builder.setView(input);
+
+        builder.setPositiveButton("PROCEED TO CHECKOUT", (dialog, which) -> {
+            String qty = input.getText().toString().trim();
+            if(qty.isEmpty() || qty.equals("0")) qty = "1";
+
+            Intent intent = new Intent(SavedDesignsActivity.this, CheckoutActivity.class);
+            intent.putExtra("PRODUCT_NAME", product);
+            intent.putExtra("QUANTITY", qty);
+            intent.putExtra("COMPILED_DETAILS", details);
+            startActivity(intent);
+        });
+
+        builder.setNegativeButton("CANCEL", (dialog, which) -> dialog.cancel());
+        builder.show();
     }
 }
