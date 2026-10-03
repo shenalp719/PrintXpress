@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@drawable/cyber_card_bg"
+    android:padding="16dp"
+    android:layout_marginBottom="12dp">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp">
+
+        <TextView
+            android:id="@+id/tvOrderId"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="ORDER #101"
+            android:textColor="#AAAAAA"
+            android:textStyle="bold"
+            android:textSize="12sp"/>
+
+        <TextView
+            android:id="@+id/tvOrderStatus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:text="PROCESSING"
+            android:textColor="#00E5FF"
+            android:textStyle="bold"
+            android:textSize="12sp"/>
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/tvOrderProduct"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Product Name"
+        android:textColor="#FFFFFF"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="4dp"/>
+
+    <TextView
+        android:id="@+id/tvOrderSummary"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Qty: 2 | Delivery: Store Pickup"
+        android:textColor="#DDDDDD"
+        android:textSize="14sp"
+        android:layout_marginBottom="8dp"/>
+
+    <TextView
+        android:id="@+id/tvOrderTotal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Total: Rs. 1500.00"
+        android:textColor="#FF003C"
+        android:textStyle="bold"
+        android:textSize="16sp"/>
+
+</LinearLayout>
