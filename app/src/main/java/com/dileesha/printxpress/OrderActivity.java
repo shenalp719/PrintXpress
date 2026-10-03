@@ -1,12 +1,10 @@
 package com.dileesha.printxpress;
 
-import android.Manifest;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
-import android.content.Context;
-import android.content.pm.PackageManager;
-import android.os.Build;
+import android.content.Intent;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.OpenableColumns;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -14,24 +12,21 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.app.NotificationCompat;
-import androidx.core.content.ContextCompat;
 
 public class OrderActivity extends AppCompatActivity {
 
-    TextView tvOrderTitle, tvOrderSubtitle;
+    TextView tvOrderTitle, tvOrderSubtitle, tvFileName;
+    TextView lblSize, lblMaterial, lblColour, lblSides;
     EditText etQuantity, etCustomText;
     Spinner spinnerSize, spinnerMaterial, spinnerColour, spinnerSides;
-    Button btnSubmitOrder, btnUpload;
-    DatabaseHelper db;
-    String selectedProduct = "";
-    String presetName = "";
-    String currentUserEmail = "";
+    Button btnProceedCheckout, btnSaveDesign, btnUpload;
 
-    private static final String CHANNEL_ID = "PrintXpress_Orders";
-    private static final int NOTIFICATION_ID = 1;
+    DatabaseHelper db;
+    String selectedProduct = "", presetName = "", currentUserEmail = "";
+    String uploadedFileName = "None";
+    private static final int PICK_FILE_REQUEST = 100;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,31 +34,29 @@ public class OrderActivity extends AppCompatActivity {
         setContentView(R.layout.activity_order);
 
         db = new DatabaseHelper(this);
-        android.content.SharedPreferences sharedPreferences = getSharedPreferences("PrintXpressPrefs", MODE_PRIVATE);
-        currentUserEmail = sharedPreferences.getString("LOGGED_IN_EMAIL", "Unknown User");
+        currentUserEmail = getSharedPreferences("PrintXpressPrefs", MODE_PRIVATE).getString("LOGGED_IN_EMAIL", "Unknown");
 
+        // Map Views
         tvOrderTitle = findViewById(R.id.tvOrderTitle);
         tvOrderSubtitle = findViewById(R.id.tvOrderSubtitle);
+        tvFileName = findViewById(R.id.tvFileName);
+
+        lblSize = findViewById(R.id.lblSize);
+        lblMaterial = findViewById(R.id.lblMaterial);
+        lblColour = findViewById(R.id.lblColour);
+        lblSides = findViewById(R.id.lblSides);
+
         etQuantity = findViewById(R.id.etQuantity);
         etCustomText = findViewById(R.id.etCustomText);
 
-        // Link Spinners
         spinnerSize = findViewById(R.id.spinnerSize);
         spinnerMaterial = findViewById(R.id.spinnerMaterial);
         spinnerColour = findViewById(R.id.spinnerColour);
         spinnerSides = findViewById(R.id.spinnerSides);
 
-        btnSubmitOrder = findViewById(R.id.btnSubmitOrder);
+        btnProceedCheckout = findViewById(R.id.btnProceedCheckout);
+        btnSaveDesign = findViewById(R.id.btnSaveDesign);
         btnUpload = findViewById(R.id.btnUpload);
-
-        setupSpinners();
-        createNotificationChannel();
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.POST_NOTIFICATIONS}, 101);
-            }
-        }
 
         selectedProduct = getIntent().getStringExtra("PRODUCT_NAME");
         presetName = getIntent().getStringExtra("PRESET_NAME");
@@ -71,84 +64,113 @@ public class OrderActivity extends AppCompatActivity {
         if(selectedProduct != null) tvOrderTitle.setText(selectedProduct);
         if(presetName != null) tvOrderSubtitle.setText(presetName);
 
-        btnUpload.setOnClickListener(v -> Toast.makeText(OrderActivity.this, "Artwork upload module initializing...", Toast.LENGTH_SHORT).show());
+        setupDynamicSpinners(selectedProduct);
 
-        btnSubmitOrder.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String quantity = etQuantity.getText().toString().trim();
+        // 1. Native File Picker
+        btnUpload.setOnClickListener(v -> {
+            Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+            intent.setType("*/*"); // Allows any file type (images, PDFs)
+            startActivityForResult(intent, PICK_FILE_REQUEST);
+        });
 
-                if(quantity.isEmpty()) {
-                    Toast.makeText(OrderActivity.this, "Quantity is required", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-
-                // Extract selected text directly from the dropdown menus
-                String selectedSize = spinnerSize.getSelectedItem().toString();
-                String selectedMaterial = spinnerMaterial.getSelectedItem().toString();
-                String selectedColour = spinnerColour.getSelectedItem().toString();
-                String selectedSides = spinnerSides.getSelectedItem().toString();
-
-                String compiledDetails = "Preset: " + presetName +
-                        " | Size: " + selectedSize +
-                        " | Material: " + selectedMaterial +
-                        " | Colour: " + selectedColour +
-                        " | Sides: " + selectedSides +
-                        " | Design Text: " + etCustomText.getText().toString();
-
-                boolean isInserted = db.insertOrder(currentUserEmail, selectedProduct, quantity, compiledDetails);
-                if(isInserted) {
-                    sendOrderConfirmationNotification(selectedProduct);
-                    Toast.makeText(OrderActivity.this, "Order Placed Successfully!", Toast.LENGTH_LONG).show();
-                    finish();
-                } else {
-                    Toast.makeText(OrderActivity.this, "Failed to place order", Toast.LENGTH_SHORT).show();
-                }
+        // 2. Save Design for Later
+        btnSaveDesign.setOnClickListener(v -> {
+            String details = compileDetails();
+            if(db.saveDesign(currentUserEmail, selectedProduct, details)) {
+                Toast.makeText(this, "Design Saved Successfully!", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(this, "Failed to save design.", Toast.LENGTH_SHORT).show();
             }
+        });
+
+        // 3. Proceed to Checkout
+        btnProceedCheckout.setOnClickListener(v -> {
+            String quantity = etQuantity.getText().toString().trim();
+            if(quantity.isEmpty()) {
+                Toast.makeText(OrderActivity.this, "Quantity is required", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            Intent intent = new Intent(OrderActivity.this, CheckoutActivity.class);
+            intent.putExtra("PRODUCT_NAME", selectedProduct);
+            intent.putExtra("QUANTITY", quantity);
+            intent.putExtra("COMPILED_DETAILS", compileDetails());
+            startActivity(intent);
         });
     }
 
-    // Populates the dropdown menus with options
-    private void setupSpinners() {
-        String[] sizes = {"90 x 54 mm", "85 x 55 mm", "65 x 65 mm (Square)"};
-        ArrayAdapter<String> sizeAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, sizes);
-        spinnerSize.setAdapter(sizeAdapter);
+    // Handles the result when a user selects a file
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == PICK_FILE_REQUEST && resultCode == RESULT_OK && data != null) {
+            Uri uri = data.getData();
+            uploadedFileName = "File attached"; // Fallback
 
-        String[] materials = {"300 GSM Matte", "300 GSM Gloss", "350 GSM Premium"};
-        ArrayAdapter<String> materialAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, materials);
-        spinnerMaterial.setAdapter(materialAdapter);
-
-        String[] colours = {"Full Colour", "Black & White"};
-        ArrayAdapter<String> colourAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, colours);
-        spinnerColour.setAdapter(colourAdapter);
-
-        String[] sides = {"Single Sided", "Double Sided"};
-        ArrayAdapter<String> sideAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, sides);
-        spinnerSides.setAdapter(sideAdapter);
-    }
-
-    private void createNotificationChannel() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            CharSequence name = "Order Notifications";
-            String description = "Channel for order status updates";
-            int importance = NotificationManager.IMPORTANCE_DEFAULT;
-            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
-            channel.setDescription(description);
-
-            NotificationManager notificationManager = getSystemService(NotificationManager.class);
-            notificationManager.createNotificationChannel(channel);
+            // Extract the actual file name from the URI
+            Cursor cursor = getContentResolver().query(uri, null, null, null, null);
+            if (cursor != null && cursor.moveToFirst()) {
+                int nameIndex = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME);
+                if(nameIndex != -1) uploadedFileName = cursor.getString(nameIndex);
+                cursor.close();
+            }
+            tvFileName.setText("Attached: " + uploadedFileName);
+            tvFileName.setTextColor(android.graphics.Color.parseColor("#00E5FF")); // Turn neon cyan on success
         }
     }
 
-    private void sendOrderConfirmationNotification(String product) {
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
-                .setSmallIcon(android.R.drawable.ic_dialog_info)
-                .setContentTitle("Order Confirmed!")
-                .setContentText("Your order for " + product + " is now processing.")
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-                .setAutoCancel(true);
+    private String compileDetails() {
+        StringBuilder details = new StringBuilder();
+        details.append("Preset: ").append(presetName);
+        if(spinnerSize.getVisibility() == View.VISIBLE) details.append(" | Size: ").append(spinnerSize.getSelectedItem().toString());
+        if(spinnerMaterial.getVisibility() == View.VISIBLE) details.append(" | Material: ").append(spinnerMaterial.getSelectedItem().toString());
+        if(spinnerColour.getVisibility() == View.VISIBLE) details.append(" | Colour: ").append(spinnerColour.getSelectedItem().toString());
+        if(spinnerSides.getVisibility() == View.VISIBLE) details.append(" | Sides: ").append(spinnerSides.getSelectedItem().toString());
 
-        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        notificationManager.notify(NOTIFICATION_ID, builder.build());
+        details.append(" | File: ").append(uploadedFileName);
+        details.append(" | Notes: ").append(etCustomText.getText().toString());
+        return details.toString();
+    }
+
+    private void setupDynamicSpinners(String product) {
+        if (product == null) product = "Business Cards";
+
+        String[] sizes; String[] materials; String[] colours; String[] sides;
+
+        switch (product) {
+            case "Custom Mugs":
+                sizes = new String[]{"11 oz Standard", "15 oz Large"};
+                materials = new String[]{"Ceramic", "Magic Color-Changing"};
+                // Hide unnecessary fields
+                lblSides.setVisibility(View.GONE); spinnerSides.setVisibility(View.GONE);
+                lblColour.setVisibility(View.GONE); spinnerColour.setVisibility(View.GONE);
+                break;
+
+            case "Custom T-Shirts":
+                sizes = new String[]{"Small", "Medium", "Large", "XL", "XXL"};
+                materials = new String[]{"100% Cotton", "Polyester Blend"};
+                lblSides.setVisibility(View.GONE); spinnerSides.setVisibility(View.GONE);
+                lblColour.setVisibility(View.GONE); spinnerColour.setVisibility(View.GONE);
+                break;
+
+            case "Stickers":
+                sizes = new String[]{"2x2 inch", "3x3 inch", "Custom Die-Cut"};
+                materials = new String[]{"Glossy Vinyl", "Matte Paper", "Transparent"};
+                lblSides.setVisibility(View.GONE); spinnerSides.setVisibility(View.GONE);
+                break;
+
+            default: // Business Cards, Flyers, Posters
+                sizes = new String[]{"90 x 54 mm", "85 x 55 mm", "A4", "A5"};
+                materials = new String[]{"300 GSM Matte", "300 GSM Gloss", "350 GSM Premium"};
+                break;
+        }
+
+        colours = new String[]{"Full Colour", "Black & White"};
+        sides = new String[]{"Single Sided", "Double Sided"};
+
+        spinnerSize.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, sizes));
+        spinnerMaterial.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, materials));
+        spinnerColour.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, colours));
+        spinnerSides.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, sides));
     }
 }

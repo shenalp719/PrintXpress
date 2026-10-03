@@ -14,60 +14,53 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/tvOrderTitle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Business Cards"
-                android:textSize="28sp"
-                android:textStyle="bold"
-                android:textColor="#00E5FF"/>
-            <TextView
-                android:id="@+id/tvOrderSubtitle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Classic Business Card"
-                android:textSize="16sp"
-                android:textColor="#AAAAAA"
-                android:layout_marginBottom="24dp"/>
+            <TextView android:id="@+id/tvOrderTitle" android:layout_width="match_parent" android:layout_height="wrap_content" android:textSize="28sp" android:textStyle="bold" android:textColor="#00E5FF"/>
+            <TextView android:id="@+id/tvOrderSubtitle" android:layout_width="match_parent" android:layout_height="wrap_content" android:textSize="16sp" android:textColor="#AAAAAA" android:layout_marginBottom="24dp"/>
 
             <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Quantity" android:textColor="#FFFFFF" android:layout_marginBottom="4dp"/>
             <EditText android:id="@+id/etQuantity" android:layout_width="match_parent" android:layout_height="wrap_content" android:hint="Enter quantity" android:textColor="#FFF" android:textColorHint="#888" android:inputType="number" android:background="#161625" android:padding="12dp" android:layout_marginBottom="16dp"/>
 
-            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Size" android:textColor="#FFFFFF" android:layout_marginBottom="4dp"/>
+            <TextView android:id="@+id/lblSize" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Size" android:textColor="#FFFFFF" android:layout_marginBottom="4dp"/>
             <Spinner android:id="@+id/spinnerSize" android:layout_width="match_parent" android:layout_height="50dp" android:background="#161625" android:layout_marginBottom="16dp" android:theme="@style/Theme.AppCompat.DayNight.DarkActionBar"/>
 
-            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Material / Paper" android:textColor="#FFFFFF" android:layout_marginBottom="4dp"/>
+            <TextView android:id="@+id/lblMaterial" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Material / Type" android:textColor="#FFFFFF" android:layout_marginBottom="4dp"/>
             <Spinner android:id="@+id/spinnerMaterial" android:layout_width="match_parent" android:layout_height="50dp" android:background="#161625" android:layout_marginBottom="16dp" android:theme="@style/Theme.AppCompat.DayNight.DarkActionBar"/>
 
-            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Print Colour" android:textColor="#FFFFFF" android:layout_marginBottom="4dp"/>
+            <TextView android:id="@+id/lblColour" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Print Colour" android:textColor="#FFFFFF" android:layout_marginBottom="4dp"/>
             <Spinner android:id="@+id/spinnerColour" android:layout_width="match_parent" android:layout_height="50dp" android:background="#161625" android:layout_marginBottom="16dp" android:theme="@style/Theme.AppCompat.DayNight.DarkActionBar"/>
 
-            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Print Sides" android:textColor="#FFFFFF" android:layout_marginBottom="4dp"/>
+            <TextView android:id="@+id/lblSides" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Print Sides" android:textColor="#FFFFFF" android:layout_marginBottom="4dp"/>
             <Spinner android:id="@+id/spinnerSides" android:layout_width="match_parent" android:layout_height="50dp" android:background="#161625" android:layout_marginBottom="24dp" android:theme="@style/Theme.AppCompat.DayNight.DarkActionBar"/>
 
-            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Design" android:textSize="18sp" android:textColor="#FFFFFF" android:layout_marginBottom="4dp"/>
-            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Upload your own artwork or enter custom text." android:textColor="#AAAAAA" android:layout_marginBottom="12dp"/>
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Design File" android:textSize="18sp" android:textColor="#FFFFFF" android:layout_marginBottom="8dp"/>
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/btnUpload"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="UPLOAD ARTWORK"
+                android:text="BROWSE FILES &amp; UPLOAD"
                 android:textColor="#FFFFFF"
                 android:backgroundTint="#9D00FF"
                 android:layout_marginBottom="8dp"/>
 
-            <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="No artwork selected" android:textColor="#888" android:textSize="12sp" android:layout_marginBottom="8dp"/>
+            <TextView android:id="@+id/tvFileName" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="No file selected" android:textColor="#888" android:textSize="14sp" android:layout_marginBottom="8dp"/>
             <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="OR" android:textColor="#FFF" android:gravity="center" android:layout_marginBottom="8dp"/>
-
-            <EditText android:id="@+id/etCustomText" android:layout_width="match_parent" android:layout_height="wrap_content" android:hint="Enter text to print" android:textColor="#FFF" android:textColorHint="#888" android:background="#161625" android:padding="12dp" android:layout_marginBottom="32dp"/>
+            <EditText android:id="@+id/etCustomText" android:layout_width="match_parent" android:layout_height="wrap_content" android:hint="Enter custom text/instructions" android:textColor="#FFF" android:textColorHint="#888" android:background="#161625" android:padding="12dp" android:layout_marginBottom="32dp"/>
 
             <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/btnSubmitOrder"
+                android:id="@+id/btnSaveDesign"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:text="SAVE DESIGN FOR LATER"
+                android:textColor="#FFFFFF"
+                android:backgroundTint="#333333"
+                android:layout_marginBottom="12dp"/>
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btnProceedCheckout"
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
-                android:text="CONFIRM PARAMETERS &amp; SUBMIT"
+                android:text="PROCEED TO CHECKOUT"
                 android:textColor="#000000"
                 android:backgroundTint="#00E5FF"
                 android:textStyle="bold"
