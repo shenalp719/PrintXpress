@@ -9,7 +9,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 public class DatabaseHelper extends SQLiteOpenHelper {
 
     public static final String DATABASE_NAME = "PrintXpress.db";
-    public static final int DATABASE_VERSION = 3; // Bumped to 3 for Profile fields
+    public static final int DATABASE_VERSION = 4; // Upgraded for Phone Number
 
     // Users Table
     public static final String TABLE_USERS = "users";
@@ -18,6 +18,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String COL_PASSWORD = "PASSWORD";
     public static final String COL_NAME = "NAME";
     public static final String COL_ADDRESS = "ADDRESS";
+    public static final String COL_PHONE = "PHONE";
 
     // Orders Table
     public static final String TABLE_ORDERS = "orders";
@@ -34,7 +35,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL("CREATE TABLE " + TABLE_USERS + " (ID INTEGER PRIMARY KEY AUTOINCREMENT, EMAIL TEXT, PASSWORD TEXT, NAME TEXT, ADDRESS TEXT)");
+        db.execSQL("CREATE TABLE " + TABLE_USERS + " (ID INTEGER PRIMARY KEY AUTOINCREMENT, EMAIL TEXT, PASSWORD TEXT, NAME TEXT, ADDRESS TEXT, PHONE TEXT)");
         db.execSQL("CREATE TABLE " + TABLE_ORDERS + " (ORDER_ID INTEGER PRIMARY KEY AUTOINCREMENT, USER_EMAIL TEXT, PRODUCT TEXT, QUANTITY TEXT, DETAILS TEXT, STATUS TEXT)");
     }
 
@@ -63,20 +64,37 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return exists;
     }
 
-    // Fetch user profile data
     public Cursor getUserDetails(String email) {
         SQLiteDatabase db = this.getReadableDatabase();
         return db.rawQuery("SELECT * FROM " + TABLE_USERS + " WHERE EMAIL=?", new String[]{email});
     }
 
-    // Update user profile data
-    public boolean updateProfile(String email, String name, String address) {
+    // Update basic profile details
+    public boolean updateProfileDetails(String email, String name, String phone, String address) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(COL_NAME, name);
+        contentValues.put(COL_PHONE, phone);
         contentValues.put(COL_ADDRESS, address);
         int result = db.update(TABLE_USERS, contentValues, COL_EMAIL + " = ?", new String[]{email});
         return result > 0;
+    }
+
+    // Update Email securely (also updates their existing orders to match)
+    public boolean updateSecureEmail(String oldEmail, String newEmail) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues cv = new ContentValues();
+        cv.put(COL_EMAIL, newEmail);
+        int result = db.update(TABLE_USERS, cv, COL_EMAIL + "=?", new String[]{oldEmail});
+
+        if (result > 0) {
+            // Update orders to match the new email so they don't lose order history
+            ContentValues orderCv = new ContentValues();
+            orderCv.put(COL_ORDER_EMAIL, newEmail);
+            db.update(TABLE_ORDERS, orderCv, COL_ORDER_EMAIL + "=?", new String[]{oldEmail});
+            return true;
+        }
+        return false;
     }
 
     // --- Order Methods ---
