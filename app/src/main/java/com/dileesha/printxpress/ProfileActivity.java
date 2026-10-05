@@ -50,11 +50,14 @@ public class ProfileActivity extends AppCompatActivity {
 
         currentUserEmail = getSharedPreferences("PrintXpressPrefs", MODE_PRIVATE).getString("LOGGED_IN_EMAIL", "Unknown User");
         tvEmail.setText(currentUserEmail);
+
         loadProfileData();
 
-        // 1. Pick Profile Picture from Gallery
+        // 1. Pick Profile Picture from Gallery (Updated for Persistent Access)
         ivProfilePic.setOnClickListener(v -> {
-            Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+            Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+            intent.addCategory(Intent.CATEGORY_OPENABLE);
+            intent.setType("image/*");
             startActivityForResult(intent, PICK_IMAGE_REQUEST);
         });
 
@@ -114,7 +117,13 @@ public class ProfileActivity extends AppCompatActivity {
         if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null) {
             Uri imageUri = data.getData();
             if (imageUri != null) {
-                // Save URI string to database
+                // Request persistent permission so it survives app restarts
+                try {
+                    getContentResolver().takePersistableUriPermission(imageUri, Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                } catch (SecurityException e) {
+                    // Ignore if the provider doesn't support persistable permissions
+                }
+
                 db.updateProfilePhoto(currentUserEmail, imageUri.toString());
                 ivProfilePic.setImageURI(imageUri);
                 Toast.makeText(this, "Profile picture updated!", Toast.LENGTH_SHORT).show();
@@ -128,16 +137,21 @@ public class ProfileActivity extends AppCompatActivity {
             String name = cursor.getString(3);
             String address = cursor.getString(4);
             String phone = cursor.getString(5);
-            String photoUri = cursor.getString(6); // Photo column
+            String photoUri = cursor.getString(6);
 
             if (name != null) etName.setText(name);
             if (address != null) etAddress.setText(address);
             if (phone != null) etPhone.setText(phone);
+
             if (photoUri != null && !photoUri.isEmpty()) {
                 try {
-                    ivProfilePic.setImageURI(Uri.parse(photoUri));
+                    Uri uri = Uri.parse(photoUri);
+                    // Safely test if we still have access BEFORE applying the image
+                    getContentResolver().openInputStream(uri).close();
+                    ivProfilePic.setImageURI(uri);
                 } catch (Exception e) {
-                    // Fallback if URI permission expires
+                    // If permission was lost, clear the broken URI from the database so it stops crashing
+                    db.updateProfilePhoto(currentUserEmail, "");
                 }
             }
         }
