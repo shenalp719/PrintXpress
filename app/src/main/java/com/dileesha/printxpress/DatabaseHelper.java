@@ -9,7 +9,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 public class DatabaseHelper extends SQLiteOpenHelper {
 
     public static final String DATABASE_NAME = "PrintXpress.db";
-    public static final int DATABASE_VERSION = 5;
+    public static final int DATABASE_VERSION = 6;
 
     // Users & Orders Tables
     public static final String TABLE_USERS = "users";
@@ -41,9 +41,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL("CREATE TABLE " + TABLE_USERS + " (ID INTEGER PRIMARY KEY AUTOINCREMENT, EMAIL TEXT, PASSWORD TEXT, NAME TEXT, ADDRESS TEXT, PHONE TEXT)");
+        db.execSQL("CREATE TABLE " + TABLE_USERS + " (ID INTEGER PRIMARY KEY AUTOINCREMENT, EMAIL TEXT, PASSWORD TEXT, NAME TEXT, ADDRESS TEXT, PHONE TEXT, PHOTO TEXT)");
         db.execSQL("CREATE TABLE " + TABLE_ORDERS + " (ORDER_ID INTEGER PRIMARY KEY AUTOINCREMENT, USER_EMAIL TEXT, PRODUCT TEXT, QUANTITY TEXT, DETAILS TEXT, DELIVERY_METHOD TEXT, PAYMENT_METHOD TEXT, TOTAL_PRICE TEXT, STATUS TEXT)");
         db.execSQL("CREATE TABLE " + TABLE_SAVED_DESIGNS + " (DESIGN_ID INTEGER PRIMARY KEY AUTOINCREMENT, USER_EMAIL TEXT, PRODUCT TEXT, DETAILS TEXT)");
+
     }
 
     @Override
@@ -82,6 +83,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         cv.put(COL_NAME, name);
         cv.put(COL_PHONE, phone);
         cv.put(COL_ADDRESS, address);
+        return db.update(TABLE_USERS, cv, COL_EMAIL + " = ?", new String[]{email}) > 0;
+    }
+
+    public boolean updateProfilePhoto(String email, String photoUri) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues cv = new ContentValues();
+        cv.put("PHOTO", photoUri);
         return db.update(TABLE_USERS, cv, COL_EMAIL + " = ?", new String[]{email}) > 0;
     }
 

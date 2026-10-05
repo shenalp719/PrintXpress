@@ -17,25 +17,35 @@
             android:padding="24dp"
             android:gravity="center_horizontal">
 
-            <!-- Avatar -->
+            <!-- Clickable Profile Picture -->
             <ImageView
+                android:id="@+id/ivProfilePic"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
                 android:src="@android:drawable/ic_menu_myplaces"
                 android:background="@drawable/cyber_card_bg"
-                android:padding="20dp"
+                android:scaleType="centerCrop"
+                android:padding="4dp"
+                android:layout_marginBottom="8dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Tap avatar to change photo"
+                android:textColor="#888888"
+                android:textSize="12sp"
                 android:layout_marginBottom="24dp"/>
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="USER_DATA//PROFILE"
+                android:text="My Profile"
                 android:textSize="22sp"
                 android:textStyle="bold"
                 android:textColor="#00E5FF"
                 android:layout_marginBottom="24dp"/>
 
-            <!-- Secure Email Field with Edit Icon -->
+            <!-- Email Field -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -104,31 +114,34 @@
                 android:id="@+id/btnSaveProfile"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="UPDATE_RECORDS"
+                android:text="Save Profile"
                 android:textColor="#000000"
                 android:padding="12dp"
                 android:backgroundTint="#00E5FF"
-                android:layout_marginBottom="16dp"/>
+                android:layout_marginBottom="16dp"
+                android:textStyle="bold"/>
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/btnViewSavedDesigns"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="VIEW_SAVED_DESIGNS"
+                android:text="View Saved Designs"
                 android:textColor="#FFFFFF"
                 android:padding="12dp"
                 android:backgroundTint="#9D00FF"
-                android:layout_marginBottom="16dp"/>
+                android:layout_marginBottom="16dp"
+                android:textStyle="bold"/>
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/btnLogout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="TERMINATE_SESSION"
+                android:text="Logout"
                 android:textColor="#FFFFFF"
                 android:padding="12dp"
                 android:backgroundTint="#FF003C"
-                android:layout_marginBottom="24dp"/>
+                android:layout_marginBottom="24dp"
+                android:textStyle="bold"/>
 
         </LinearLayout>
     </ScrollView>

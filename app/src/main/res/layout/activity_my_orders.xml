@@ -15,7 +15,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="ORDER_DATA//HISTORY"
+            android:text="ORDER HISTORY"
             android:textSize="24sp"
             android:textStyle="bold"
             android:textColor="#00E5FF"
