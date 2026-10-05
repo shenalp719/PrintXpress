@@ -4,12 +4,14 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
 public class ProductPresetActivity extends AppCompatActivity {
 
     TextView tvProductTitle, tvPresetName, tvPresetPrice, tvPresetSpecs;
+    ImageView ivPresetImage;
     Button btnSelectPreset;
     String productName = "";
 
@@ -20,8 +22,9 @@ public class ProductPresetActivity extends AppCompatActivity {
 
         tvProductTitle = findViewById(R.id.tvProductTitle);
         tvPresetName = findViewById(R.id.tvPresetName);
-        tvPresetPrice = findViewById(R.id.tvPresetPrice); // Link the price text
-        tvPresetSpecs = findViewById(R.id.tvPresetSpecs); // Link the specs text
+        tvPresetPrice = findViewById(R.id.tvPresetPrice);
+        tvPresetSpecs = findViewById(R.id.tvPresetSpecs);
+        ivPresetImage = findViewById(R.id.ivPresetImage); // Linked the ImageView
         btnSelectPreset = findViewById(R.id.btnSelectPreset);
 
         productName = getIntent().getStringExtra("PRODUCT_NAME");
@@ -30,38 +33,45 @@ public class ProductPresetActivity extends AppCompatActivity {
             tvProductTitle.setText(productName);
             tvPresetName.setText("Standard " + productName);
 
-            // Dynamically assign price and specs based on product
             int basePrice = 1000;
             String specs = "";
 
+            // Dynamically assign price, specs, AND the new images based on product
             switch (productName) {
                 case "Business Cards":
                     basePrice = 1500;
                     specs = "Size: 90 x 54 mm\nPaper: 300 GSM\nFinish: Matte";
+                    ivPresetImage.setImageResource(R.drawable.img_preset_cards);
                     break;
                 case "Flyers":
                     basePrice = 2000;
                     specs = "Size: A5\nPaper: 150 GSM\nFinish: Gloss";
+                    ivPresetImage.setImageResource(R.drawable.img_preset_flyers);
                     break;
                 case "Posters":
                     basePrice = 800;
                     specs = "Size: A3\nPaper: 200 GSM\nFinish: Gloss";
+                    ivPresetImage.setImageResource(R.drawable.img_preset_posters);
                     break;
                 case "Custom Mugs":
                     basePrice = 1200;
                     specs = "Size: 11 oz\nMaterial: Ceramic\nColor: White";
+                    ivPresetImage.setImageResource(R.drawable.img_preset_mugs);
                     break;
                 case "Custom T-Shirts":
                     basePrice = 2500;
                     specs = "Size: Medium\nMaterial: 100% Cotton\nColor: Black";
+                    ivPresetImage.setImageResource(R.drawable.img_preset_tshirts);
                     break;
                 case "Stickers":
                     basePrice = 500;
                     specs = "Size: 2x2 inch\nMaterial: Glossy Vinyl\nCut: Die-Cut";
+                    ivPresetImage.setImageResource(R.drawable.img_preset_stickers);
                     break;
                 case "Banners":
                     basePrice = 3500;
                     specs = "Size: 6x3 ft\nMaterial: PVC Flex\nFinish: Matte with Eyelets";
+                    ivPresetImage.setImageResource(R.drawable.img_preset_banners);
                     break;
                 default:
                     basePrice = 1000;
