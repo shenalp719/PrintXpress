@@ -75,20 +75,20 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
-        // Login Logic
+        // Login Logic inside MainActivity.java
         btnLogin.setOnClickListener(v -> {
-            String email = etEmail.getText().toString().trim();
+            String identifier = etEmail.getText().toString().trim();
             String password = etPassword.getText().toString().trim();
 
-            if (email.isEmpty() || password.isEmpty()) {
+            if (identifier.isEmpty() || password.isEmpty()) {
                 Toast.makeText(MainActivity.this, "Please enter all fields", Toast.LENGTH_SHORT).show();
                 return;
             }
 
-            if (db.checkUser(email, password)) {
-                getSharedPreferences("PrintXpressPrefs", MODE_PRIVATE).edit().putString("LOGGED_IN_EMAIL", email).apply();
+            if (db.checkUser(identifier, password)) {
+                // The identifier (Email OR Phone) acts as the primary key for the session
+                getSharedPreferences("PrintXpressPrefs", MODE_PRIVATE).edit().putString("LOGGED_IN_EMAIL", identifier).apply();
 
-                // Trigger Assignment Notifications
                 NotificationHelper.sendLoginAlert(MainActivity.this);
                 NotificationHelper.sendPromoAlert(MainActivity.this);
 

@@ -56,20 +56,39 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     // --- User Methods ---
-    public boolean insertUser(String email, String password) {
-        SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues cv = new ContentValues();
-        cv.put(COL_EMAIL, email);
-        cv.put(COL_PASSWORD, password);
-        return db.insert(TABLE_USERS, null, cv) != -1;
-    }
-
-    public boolean checkUser(String email, String password) {
-        SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_USERS + " WHERE EMAIL=? AND PASSWORD=?", new String[]{email, password});
+    // Checks if the email or phone is already taken before registering
+    public boolean checkUserExists(String identifier) {
+        android.database.sqlite.SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_USERS + " WHERE EMAIL = ? OR PHONE = ?", new String[]{identifier, identifier});
         boolean exists = cursor.getCount() > 0;
         cursor.close();
         return exists;
+    }
+    // Inserts into the correct column based on what the user typed
+    public boolean insertUser(String identifier, String password) {
+        android.database.sqlite.SQLiteDatabase db = this.getWritableDatabase();
+        android.content.ContentValues cv = new android.content.ContentValues();
+        cv.put(COL_PASSWORD, password);
+
+        if (identifier.contains("@")) {
+            cv.put(COL_EMAIL, identifier);
+            cv.put(COL_PHONE, "");
+        } else {
+            cv.put(COL_PHONE, identifier);
+            cv.put(COL_EMAIL, "");
+        }
+
+        long result = db.insert(TABLE_USERS, null, cv);
+        return result != -1;
+    }
+
+    // Allows login via either Email or Phone
+    public boolean checkUser(String identifier, String password) {
+        android.database.sqlite.SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_USERS + " WHERE (EMAIL = ? OR PHONE = ?) AND PASSWORD = ?", new String[]{identifier, identifier, password});
+        boolean valid = cursor.getCount() > 0;
+        cursor.close();
+        return valid;
     }
 
     public Cursor getUserDetails(String email) {
