@@ -50,8 +50,7 @@
                     android:text="Business Cards"
                     android:textColor="#00E5FF"
                     android:background="@drawable/cyber_card_bg"
-                    android:drawableTop="@android:drawable/ic_menu_recent_history"
-                    android:drawableTint="#00E5FF"
+                    android:drawableTop="@drawable/icon_cards"
                     android:paddingTop="20dp"
                     android:textStyle="bold"/>
 
@@ -64,8 +63,7 @@
                     android:text="Stickers"
                     android:textColor="#9D00FF"
                     android:background="@drawable/cyber_card_bg"
-                    android:drawableTop="@android:drawable/ic_menu_crop"
-                    android:drawableTint="#9D00FF"
+                    android:drawableTop="@drawable/icon_stickers"
                     android:paddingTop="20dp"
                     android:textStyle="bold"/>
             </LinearLayout>
@@ -86,8 +84,7 @@
                     android:text="Flyers"
                     android:textColor="#FF003C"
                     android:background="@drawable/cyber_card_bg"
-                    android:drawableTop="@android:drawable/ic_menu_gallery"
-                    android:drawableTint="#FF003C"
+                    android:drawableTop="@drawable/icon_flyers"
                     android:paddingTop="20dp"
                     android:textStyle="bold"/>
 
@@ -100,8 +97,7 @@
                     android:text="Posters"
                     android:textColor="#00E5FF"
                     android:background="@drawable/cyber_card_bg"
-                    android:drawableTop="@android:drawable/ic_menu_mapmode"
-                    android:drawableTint="#00E5FF"
+                    android:drawableTop="@drawable/icon_posters"
                     android:paddingTop="20dp"
                     android:textStyle="bold"/>
             </LinearLayout>
@@ -122,8 +118,7 @@
                     android:text="Custom Mugs"
                     android:textColor="#9D00FF"
                     android:background="@drawable/cyber_card_bg"
-                    android:drawableTop="@android:drawable/ic_menu_camera"
-                    android:drawableTint="#9D00FF"
+                    android:drawableTop="@drawable/icon_mugs"
                     android:paddingTop="20dp"
                     android:textStyle="bold"/>
 
@@ -136,8 +131,7 @@
                     android:text="Custom T-Shirts"
                     android:textColor="#FF003C"
                     android:background="@drawable/cyber_card_bg"
-                    android:drawableTop="@android:drawable/ic_menu_myplaces"
-                    android:drawableTint="#FF003C"
+                    android:drawableTop="@drawable/icon_tshirts"
                     android:paddingTop="20dp"
                     android:textStyle="bold"/>
             </LinearLayout>
@@ -150,8 +144,7 @@
                 android:text="Banners"
                 android:textColor="#00E5FF"
                 android:background="@drawable/cyber_card_bg"
-                android:drawableTop="@android:drawable/ic_menu_manage"
-                android:drawableTint="#00E5FF"
+                android:drawableTop="@drawable/icon_banners"
                 android:paddingTop="20dp"
                 android:layout_marginBottom="24dp"
                 android:textStyle="bold"/>
