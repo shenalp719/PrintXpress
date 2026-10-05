@@ -10,27 +10,27 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public class SupportActivity extends AppCompatActivity {
 
-    Button btnContactSupport;
+    Button btnEmailSupport;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_support);
 
-        btnContactSupport = findViewById(R.id.btnContactSupport);
+        btnEmailSupport = findViewById(R.id.btnEmailSupport);
 
-        btnContactSupport.setOnClickListener(new View.OnClickListener() {
+        btnEmailSupport.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Creates an intent to send an email
+                // Creates an intent to open the user's email app
                 Intent emailIntent = new Intent(Intent.ACTION_SENDTO);
                 emailIntent.setData(Uri.parse("mailto:support@printxpress.com"));
-                emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Design Support Inquiry");
+                emailIntent.putExtra(Intent.EXTRA_SUBJECT, "PrintXpress Customer Support Request");
 
                 try {
                     startActivity(emailIntent);
-                } catch (Exception e) {
-                    Toast.makeText(SupportActivity.this, "No email app found.", Toast.LENGTH_SHORT).show();
+                } catch (android.content.ActivityNotFoundException ex) {
+                    Toast.makeText(SupportActivity.this, "No email client installed on this device.", Toast.LENGTH_SHORT).show();
                 }
             }
         });
