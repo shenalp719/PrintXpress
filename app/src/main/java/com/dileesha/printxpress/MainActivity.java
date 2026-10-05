@@ -32,65 +32,36 @@ public class MainActivity extends AppCompatActivity {
         btnLogin = findViewById(R.id.btnLogin);
         btnRegister = findViewById(R.id.btnRegister);
 
-        // Register Logic
-        btnRegister.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String email = etEmail.getText().toString().trim();
-                String password = etPassword.getText().toString().trim();
-
-                if(email.isEmpty() || password.isEmpty()){
-                    Toast.makeText(MainActivity.this, "Please enter all fields", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-
-                if(!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-                    Toast.makeText(MainActivity.this, "Please enter a valid email address", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-
-                if(password.length() < 6) {
-                    Toast.makeText(MainActivity.this, "Password must be at least 6 characters", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-
-                boolean isInserted = db.insertUser(email, password);
-                if(isInserted) {
-                    Toast.makeText(MainActivity.this, "Registered Successfully!", Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(MainActivity.this, "Registration Failed", Toast.LENGTH_SHORT).show();
-                }
-            }
+        // Redirects to the dedicated Registration Activity
+        btnRegister.setOnClickListener(v -> {
+            Intent intent = new Intent(MainActivity.this, RegisterActivity.class);
+            startActivity(intent);
         });
 
-        // Login Logic (Only ONE block now)
-        btnLogin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String email = etEmail.getText().toString().trim();
-                String password = etPassword.getText().toString().trim();
+        // Login Logic
+        btnLogin.setOnClickListener(v -> {
+            String email = etEmail.getText().toString().trim();
+            String password = etPassword.getText().toString().trim();
 
-                if(email.isEmpty() || password.isEmpty()){
-                    Toast.makeText(MainActivity.this, "Please enter all fields", Toast.LENGTH_SHORT).show();
-                    return;
-                }
+            if (email.isEmpty() || password.isEmpty()) {
+                Toast.makeText(MainActivity.this, "Please enter all fields", Toast.LENGTH_SHORT).show();
+                return;
+            }
 
-                boolean isValid = db.checkUser(email, password);
-                if(isValid) {
-                    // Save the email to memory
-                    android.content.SharedPreferences sharedPreferences = getSharedPreferences("PrintXpressPrefs", MODE_PRIVATE);
-                    android.content.SharedPreferences.Editor editor = sharedPreferences.edit();
-                    editor.putString("LOGGED_IN_EMAIL", email);
-                    editor.apply();
+            boolean isValid = db.checkUser(email, password);
+            if (isValid) {
+                android.content.SharedPreferences sharedPreferences = getSharedPreferences("PrintXpressPrefs", MODE_PRIVATE);
+                android.content.SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putString("LOGGED_IN_EMAIL", email);
+                editor.apply();
 
-                    Toast.makeText(MainActivity.this, "Login Successful!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, "Login Successful!", Toast.LENGTH_SHORT).show();
 
-                    Intent intent = new Intent(MainActivity.this, DashboardActivity.class);
-                    startActivity(intent);
-                    finish();
-                } else {
-                    Toast.makeText(MainActivity.this, "Invalid Credentials", Toast.LENGTH_SHORT).show();
-                }
+                Intent intent = new Intent(MainActivity.this, DashboardActivity.class);
+                startActivity(intent);
+                finish();
+            } else {
+                Toast.makeText(MainActivity.this, "Invalid Credentials", Toast.LENGTH_SHORT).show();
             }
         });
     }
