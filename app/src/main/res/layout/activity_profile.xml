@@ -121,25 +121,33 @@
                 android:layout_marginBottom="16dp"
                 android:textStyle="bold"/>
 
+            <!-- View Saved Designs Button -->
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/btnViewSavedDesigns"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="60dp"
                 android:text="View Saved Designs"
-                android:textColor="#FFFFFF"
-                android:padding="12dp"
-                android:backgroundTint="#9D00FF"
+                android:textColor="#9D00FF"
+                android:background="@drawable/cyber_card_bg"
+                android:drawableStart="@android:drawable/ic_menu_agenda"
+                android:drawableTint="#9D00FF"
+                android:paddingStart="24dp"
+                android:paddingEnd="24dp"
                 android:layout_marginBottom="16dp"
                 android:textStyle="bold"/>
 
+            <!-- Logout Button -->
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/btnLogout"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Logout"
-                android:textColor="#FFFFFF"
-                android:padding="12dp"
-                android:backgroundTint="#FF003C"
+                android:layout_height="60dp"
+                android:text="Logout Session"
+                android:textColor="#FF003C"
+                android:background="@drawable/cyber_card_bg"
+                android:drawableStart="@android:drawable/ic_lock_power_off"
+                android:drawableTint="#FF003C"
+                android:paddingStart="24dp"
+                android:paddingEnd="24dp"
                 android:layout_marginBottom="24dp"
                 android:textStyle="bold"/>
 
