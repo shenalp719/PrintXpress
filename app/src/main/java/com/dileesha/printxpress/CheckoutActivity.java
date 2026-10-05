@@ -137,6 +137,9 @@ public class CheckoutActivity extends AppCompatActivity {
             boolean isInserted = db.insertOrder(currentUserEmail, productName, String.valueOf(quantity), finalDetails, deliveryMethod, paymentMethod, finalTotal);
 
             if (isInserted) {
+                // ADDED: Trigger Confirmation Notification
+                NotificationHelper.sendOrderConfirmedAlert(CheckoutActivity.this, productName);
+
                 Toast.makeText(CheckoutActivity.this, "PAYMENT CONFIRMED. ORDER SECURED.", Toast.LENGTH_LONG).show();
                 Intent intent = new Intent(CheckoutActivity.this, DashboardActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);

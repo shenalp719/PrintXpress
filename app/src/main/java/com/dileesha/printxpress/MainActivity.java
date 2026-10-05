@@ -64,5 +64,39 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(MainActivity.this, "Invalid Credentials", Toast.LENGTH_SHORT).show();
             }
         });
+
+        // Initialize Notification Channel
+        NotificationHelper.createNotificationChannel(this);
+
+        // Request Permission for Android 13+
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
+            if (androidx.core.content.ContextCompat.checkSelfPermission(this, android.Manifest.permission.POST_NOTIFICATIONS) != android.content.pm.PackageManager.PERMISSION_GRANTED) {
+                androidx.core.app.ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.POST_NOTIFICATIONS}, 101);
+            }
+        }
+
+        // Login Logic
+        btnLogin.setOnClickListener(v -> {
+            String email = etEmail.getText().toString().trim();
+            String password = etPassword.getText().toString().trim();
+
+            if (email.isEmpty() || password.isEmpty()) {
+                Toast.makeText(MainActivity.this, "Please enter all fields", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            if (db.checkUser(email, password)) {
+                getSharedPreferences("PrintXpressPrefs", MODE_PRIVATE).edit().putString("LOGGED_IN_EMAIL", email).apply();
+
+                // Trigger Assignment Notifications
+                NotificationHelper.sendLoginAlert(MainActivity.this);
+                NotificationHelper.sendPromoAlert(MainActivity.this);
+
+                startActivity(new Intent(MainActivity.this, DashboardActivity.class));
+                finish();
+            } else {
+                Toast.makeText(MainActivity.this, "Invalid Credentials", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 }
