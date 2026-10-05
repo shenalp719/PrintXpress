@@ -32,17 +32,20 @@
                 android:textColor="#00E5FF"
                 android:layout_marginBottom="24dp"/>
 
-            <!-- Gallery Item 1 -->
+            <!-- Gallery Card 1: Banners -->
             <LinearLayout
+                android:id="@+id/cardGallery1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:background="@drawable/cyber_card_bg"
                 android:padding="12dp"
-                android:layout_marginBottom="20dp">
+                android:layout_marginBottom="20dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?attr/selectableItemBackground">
 
                 <ImageView
-                    android:id="@+id/ivGallery1"
                     android:layout_width="match_parent"
                     android:layout_height="200dp"
                     android:scaleType="centerCrop"
@@ -58,17 +61,20 @@
                     android:textSize="16sp"/>
             </LinearLayout>
 
-            <!-- Gallery Item 2 -->
+            <!-- Gallery Card 2: Business Cards -->
             <LinearLayout
+                android:id="@+id/cardGallery2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:background="@drawable/cyber_card_bg"
                 android:padding="12dp"
-                android:layout_marginBottom="20dp">
+                android:layout_marginBottom="20dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?attr/selectableItemBackground">
 
                 <ImageView
-                    android:id="@+id/ivGallery2"
                     android:layout_width="match_parent"
                     android:layout_height="200dp"
                     android:scaleType="centerCrop"
@@ -84,17 +90,20 @@
                     android:textSize="16sp"/>
             </LinearLayout>
 
-            <!-- Gallery Item 3 -->
+            <!-- Gallery Card 3: Stickers -->
             <LinearLayout
+                android:id="@+id/cardGallery3"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:background="@drawable/cyber_card_bg"
                 android:padding="12dp"
-                android:layout_marginBottom="32dp">
+                android:layout_marginBottom="32dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?attr/selectableItemBackground">
 
                 <ImageView
-                    android:id="@+id/ivGallery3"
                     android:layout_width="match_parent"
                     android:layout_height="200dp"
                     android:scaleType="centerCrop"

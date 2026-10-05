@@ -1,35 +1,47 @@
 package com.dileesha.printxpress;
 
+import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 public class GalleryActivity extends AppCompatActivity {
 
-    ImageView ivGallery1, ivGallery2, ivGallery3;
+    LinearLayout cardGallery1, cardGallery2, cardGallery3;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_gallery);
 
-        ivGallery1 = findViewById(R.id.ivGallery1);
-        ivGallery2 = findViewById(R.id.ivGallery2);
-        ivGallery3 = findViewById(R.id.ivGallery3);
+        // Link the full cards instead of just the images
+        cardGallery1 = findViewById(R.id.cardGallery1);
+        cardGallery2 = findViewById(R.id.cardGallery2);
+        cardGallery3 = findViewById(R.id.cardGallery3);
 
-        // Click listeners for the gallery items
-        ivGallery1.setOnClickListener(v -> {
-            Toast.makeText(GalleryActivity.this, "Loading Banner specifications...", Toast.LENGTH_SHORT).show();
+        // Banner Gallery Item
+        cardGallery1.setOnClickListener(v -> {
+            Toast.makeText(GalleryActivity.this, "Loading Banner presets...", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(GalleryActivity.this, ProductPresetActivity.class);
+            intent.putExtra("PRODUCT_NAME", "Banners");
+            startActivity(intent);
         });
 
-        ivGallery2.setOnClickListener(v -> {
-            Toast.makeText(GalleryActivity.this, "Loading Business Card specifications...", Toast.LENGTH_SHORT).show();
+        // Business Card Gallery Item
+        cardGallery2.setOnClickListener(v -> {
+            Toast.makeText(GalleryActivity.this, "Loading Business Card presets...", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(GalleryActivity.this, ProductPresetActivity.class);
+            intent.putExtra("PRODUCT_NAME", "Business Cards");
+            startActivity(intent);
         });
 
-        ivGallery3.setOnClickListener(v -> {
-            Toast.makeText(GalleryActivity.this, "Loading Sticker specifications...", Toast.LENGTH_SHORT).show();
+        // Sticker Gallery Item
+        cardGallery3.setOnClickListener(v -> {
+            Toast.makeText(GalleryActivity.this, "Loading Sticker presets...", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(GalleryActivity.this, ProductPresetActivity.class);
+            intent.putExtra("PRODUCT_NAME", "Stickers");
+            startActivity(intent);
         });
     }
 }
