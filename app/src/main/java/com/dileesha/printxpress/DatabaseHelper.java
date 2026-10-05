@@ -91,27 +91,45 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return valid;
     }
 
-    public Cursor getUserDetails(String email) {
-        SQLiteDatabase db = this.getReadableDatabase();
-        return db.rawQuery("SELECT * FROM " + TABLE_USERS + " WHERE EMAIL=?", new String[]{email});
+    public Cursor getUserDetails(String identifier) {
+        android.database.sqlite.SQLiteDatabase db = this.getReadableDatabase();
+        return db.rawQuery("SELECT * FROM " + TABLE_USERS + " WHERE EMAIL = ? OR PHONE = ?", new String[]{identifier, identifier});
     }
 
-    public boolean updateProfileDetails(String email, String name, String phone, String address) {
-        SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues cv = new ContentValues();
-        cv.put(COL_NAME, name);
-        cv.put(COL_PHONE, phone);
-        cv.put(COL_ADDRESS, address);
-        return db.update(TABLE_USERS, cv, COL_EMAIL + " = ?", new String[]{email}) > 0;
+    public boolean updateProfileDetails(String identifier, String name, String phone, String address) {
+        android.database.sqlite.SQLiteDatabase db = this.getWritableDatabase();
+        android.content.ContentValues cv = new android.content.ContentValues();
+        cv.put("NAME", name);
+        cv.put("ADDRESS", address);
+
+        // Only update the secondary phone column if they logged in with an Email
+        if (identifier.contains("@")) {
+            cv.put("PHONE", phone);
+        }
+
+        return db.update(TABLE_USERS, cv, "EMAIL = ? OR PHONE = ?", new String[]{identifier, identifier}) > 0;
     }
 
-    public boolean updateProfilePhoto(String email, String photoUri) {
-        SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues cv = new ContentValues();
+    public boolean updateProfilePhoto(String identifier, String photoUri) {
+        android.database.sqlite.SQLiteDatabase db = this.getWritableDatabase();
+        android.content.ContentValues cv = new android.content.ContentValues();
         cv.put("PHOTO", photoUri);
-        return db.update(TABLE_USERS, cv, COL_EMAIL + " = ?", new String[]{email}) > 0;
+        return db.update(TABLE_USERS, cv, "EMAIL = ? OR PHONE = ?", new String[]{identifier, identifier}) > 0;
     }
 
+    public boolean updateSecureIdentifier(String oldIdentifier, String newIdentifier) {
+        android.database.sqlite.SQLiteDatabase db = this.getWritableDatabase();
+        android.content.ContentValues cv = new android.content.ContentValues();
+
+        if (newIdentifier.contains("@")) {
+            cv.put("EMAIL", newIdentifier);
+            cv.put("PHONE", ""); // Clear phone if switching to email
+        } else {
+            cv.put("PHONE", newIdentifier);
+            cv.put("EMAIL", ""); // Clear email if switching to phone
+        }
+        return db.update(TABLE_USERS, cv, "EMAIL = ? OR PHONE = ?", new String[]{oldIdentifier, oldIdentifier}) > 0;
+    }
     // Update Email securely (updates users, orders, and saved designs)
     public boolean updateSecureEmail(String oldEmail, String newEmail) {
         SQLiteDatabase db = this.getWritableDatabase();

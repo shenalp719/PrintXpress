@@ -1,6 +1,5 @@
 package com.dileesha.printxpress;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
@@ -26,7 +25,7 @@ public class ProfileActivity extends AppCompatActivity {
     ImageButton btnEditEmail;
     ImageView ivProfilePic;
     DatabaseHelper db;
-    String currentUserEmail;
+    String currentIdentifier;
     BottomNavigationView bottomNavigationView;
 
     private static final int PICK_IMAGE_REQUEST = 200;
@@ -48,12 +47,18 @@ public class ProfileActivity extends AppCompatActivity {
         ivProfilePic = findViewById(R.id.ivProfilePic);
         bottomNavigationView = findViewById(R.id.bottomNavigationView);
 
-        currentUserEmail = getSharedPreferences("PrintXpressPrefs", MODE_PRIVATE).getString("LOGGED_IN_EMAIL", "Unknown User");
-        tvEmail.setText(currentUserEmail);
+        currentIdentifier = getSharedPreferences("PrintXpressPrefs", MODE_PRIVATE).getString("LOGGED_IN_EMAIL", "Unknown User");
+
+        // Dynamic UI adjustment based on login method
+        if (currentIdentifier.contains("@")) {
+            tvEmail.setText("Email: " + currentIdentifier);
+        } else {
+            tvEmail.setText("Account ID: " + currentIdentifier);
+            etPhone.setVisibility(View.GONE); // Hide redundant phone field
+        }
 
         loadProfileData();
 
-        // 1. Pick Profile Picture from Gallery (Updated for Persistent Access)
         ivProfilePic.setOnClickListener(v -> {
             Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
             intent.addCategory(Intent.CATEGORY_OPENABLE);
@@ -61,16 +66,14 @@ public class ProfileActivity extends AppCompatActivity {
             startActivityForResult(intent, PICK_IMAGE_REQUEST);
         });
 
-        // 2. Secure Email Edit Logic
-        btnEditEmail.setOnClickListener(v -> requestPasswordForEmailChange());
+        btnEditEmail.setOnClickListener(v -> requestPasswordForIdentifierChange());
 
-        // 3. Standard Profile Save Logic
         btnSaveProfile.setOnClickListener(v -> {
             String name = etName.getText().toString().trim();
             String phone = etPhone.getText().toString().trim();
             String address = etAddress.getText().toString().trim();
 
-            boolean isUpdated = db.updateProfileDetails(currentUserEmail, name, phone, address);
+            boolean isUpdated = db.updateProfileDetails(currentIdentifier, name, phone, address);
             if (isUpdated) {
                 Toast.makeText(ProfileActivity.this, "Profile Saved Successfully", Toast.LENGTH_SHORT).show();
             } else {
@@ -78,10 +81,8 @@ public class ProfileActivity extends AppCompatActivity {
             }
         });
 
-        // 4. View Saved Designs Logic
         btnViewSavedDesigns.setOnClickListener(v -> startActivity(new Intent(ProfileActivity.this, SavedDesignsActivity.class)));
 
-        // 5. Logout Logic
         btnLogout.setOnClickListener(v -> {
             getSharedPreferences("PrintXpressPrefs", MODE_PRIVATE).edit().clear().apply();
             Intent intent = new Intent(ProfileActivity.this, MainActivity.class);
@@ -90,7 +91,6 @@ public class ProfileActivity extends AppCompatActivity {
             finish();
         });
 
-        // 6. Bottom Navigation Logic
         bottomNavigationView.setSelectedItemId(R.id.nav_profile);
         bottomNavigationView.setOnItemSelectedListener(item -> {
             int id = item.getItemId();
@@ -117,22 +117,24 @@ public class ProfileActivity extends AppCompatActivity {
         if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null) {
             Uri imageUri = data.getData();
             if (imageUri != null) {
-                // Request persistent permission so it survives app restarts
                 try {
                     getContentResolver().takePersistableUriPermission(imageUri, Intent.FLAG_GRANT_READ_URI_PERMISSION);
                 } catch (SecurityException e) {
-                    // Ignore if the provider doesn't support persistable permissions
+                    // Ignore
                 }
 
-                db.updateProfilePhoto(currentUserEmail, imageUri.toString());
-                ivProfilePic.setImageURI(imageUri);
-                Toast.makeText(this, "Profile picture updated!", Toast.LENGTH_SHORT).show();
+                if (db.updateProfilePhoto(currentIdentifier, imageUri.toString())) {
+                    ivProfilePic.setImageURI(imageUri);
+                    Toast.makeText(this, "Profile picture updated!", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(this, "Error updating photo in database", Toast.LENGTH_SHORT).show();
+                }
             }
         }
     }
 
     private void loadProfileData() {
-        Cursor cursor = db.getUserDetails(currentUserEmail);
+        Cursor cursor = db.getUserDetails(currentIdentifier);
         if (cursor.moveToFirst()) {
             String name = cursor.getString(3);
             String address = cursor.getString(4);
@@ -141,27 +143,25 @@ public class ProfileActivity extends AppCompatActivity {
 
             if (name != null) etName.setText(name);
             if (address != null) etAddress.setText(address);
-            if (phone != null) etPhone.setText(phone);
+            if (phone != null && currentIdentifier.contains("@")) etPhone.setText(phone);
 
             if (photoUri != null && !photoUri.isEmpty()) {
                 try {
                     Uri uri = Uri.parse(photoUri);
-                    // Safely test if we still have access BEFORE applying the image
                     getContentResolver().openInputStream(uri).close();
                     ivProfilePic.setImageURI(uri);
                 } catch (Exception e) {
-                    // If permission was lost, clear the broken URI from the database so it stops crashing
-                    db.updateProfilePhoto(currentUserEmail, "");
+                    db.updateProfilePhoto(currentIdentifier, "");
                 }
             }
         }
         cursor.close();
     }
 
-    private void requestPasswordForEmailChange() {
+    private void requestPasswordForIdentifierChange() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Security Check");
-        builder.setMessage("Enter current password to modify email:");
+        builder.setMessage("Enter current password to modify Account ID:");
 
         final EditText input = new EditText(this);
         input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
@@ -169,8 +169,8 @@ public class ProfileActivity extends AppCompatActivity {
 
         builder.setPositiveButton("Verify", (dialog, which) -> {
             String enteredPassword = input.getText().toString();
-            if (db.checkUser(currentUserEmail, enteredPassword)) {
-                showNewEmailDialog();
+            if (db.checkUser(currentIdentifier, enteredPassword)) {
+                showNewIdentifierDialog();
             } else {
                 Toast.makeText(ProfileActivity.this, "Access Denied: Incorrect Password", Toast.LENGTH_LONG).show();
             }
@@ -179,30 +179,47 @@ public class ProfileActivity extends AppCompatActivity {
         builder.show();
     }
 
-    private void showNewEmailDialog() {
+    private void showNewIdentifierDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Update Email");
-        builder.setMessage("Enter your new email address:");
+        builder.setTitle("Update Account ID");
+        builder.setMessage("Enter new email or 10-digit phone number:");
 
         final EditText input = new EditText(this);
-        input.setInputType(InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
+        input.setInputType(InputType.TYPE_CLASS_TEXT);
         builder.setView(input);
 
         builder.setPositiveButton("Confirm", (dialog, which) -> {
-            String newEmail = input.getText().toString().trim();
+            String newId = input.getText().toString().trim();
 
-            if(!android.util.Patterns.EMAIL_ADDRESS.matcher(newEmail).matches()) {
+            boolean isEmail = newId.contains("@");
+            boolean isPhone = newId.matches("\\d+");
+
+            if (isEmail && !android.util.Patterns.EMAIL_ADDRESS.matcher(newId).matches()) {
                 Toast.makeText(ProfileActivity.this, "Invalid Email Format", Toast.LENGTH_SHORT).show();
+                return;
+            } else if (isPhone && newId.length() != 10) {
+                Toast.makeText(ProfileActivity.this, "Phone number must be exactly 10 digits", Toast.LENGTH_SHORT).show();
+                return;
+            } else if (!isEmail && !isPhone) {
+                Toast.makeText(ProfileActivity.this, "Enter a valid email or 10-digit phone number", Toast.LENGTH_SHORT).show();
                 return;
             }
 
-            if (db.updateSecureEmail(currentUserEmail, newEmail)) {
-                getSharedPreferences("PrintXpressPrefs", MODE_PRIVATE).edit().putString("LOGGED_IN_EMAIL", newEmail).apply();
-                currentUserEmail = newEmail;
-                tvEmail.setText(newEmail);
-                Toast.makeText(ProfileActivity.this, "Email Updated Successfully", Toast.LENGTH_SHORT).show();
+            if (db.updateSecureIdentifier(currentIdentifier, newId)) {
+                getSharedPreferences("PrintXpressPrefs", MODE_PRIVATE).edit().putString("LOGGED_IN_EMAIL", newId).apply();
+                currentIdentifier = newId;
+
+                if (currentIdentifier.contains("@")) {
+                    tvEmail.setText("Email: " + currentIdentifier);
+                    etPhone.setVisibility(View.VISIBLE);
+                } else {
+                    tvEmail.setText("Account ID: " + currentIdentifier);
+                    etPhone.setVisibility(View.GONE);
+                }
+
+                Toast.makeText(ProfileActivity.this, "Account ID Updated Successfully", Toast.LENGTH_SHORT).show();
             } else {
-                Toast.makeText(ProfileActivity.this, "System Error updating email", Toast.LENGTH_SHORT).show();
+                Toast.makeText(ProfileActivity.this, "System Error updating Account ID", Toast.LENGTH_SHORT).show();
             }
         });
         builder.setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
