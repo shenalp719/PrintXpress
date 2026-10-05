@@ -15,19 +15,48 @@
         <TextView android:id="@+id/tvOrderSummary" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Loading summary..." android:textColor="#AAAAAA" android:textSize="16sp" android:background="#161625" android:padding="16dp" android:layout_marginBottom="24dp"/>
 
         <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Delivery Method" android:textColor="#FFFFFF" android:textSize="18sp" android:layout_marginBottom="8dp"/>
-        <RadioGroup android:id="@+id/rgDelivery" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="24dp">
+        <RadioGroup android:id="@+id/rgDelivery" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="16dp">
             <RadioButton android:id="@+id/rbPickup" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Store Pick-up (Free)" android:textColor="#FFF" android:buttonTint="#00E5FF" android:checked="true"/>
             <RadioButton android:id="@+id/rbDelivery" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Home Delivery (+150 LKR)" android:textColor="#FFF" android:buttonTint="#00E5FF"/>
         </RadioGroup>
 
+        <!-- Dynamic Address Section -->
+        <LinearLayout
+            android:id="@+id/llAddressContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone"
+            android:layout_marginBottom="24dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Delivery Address"
+                android:textColor="#FFFFFF"
+                android:textSize="14sp"
+                android:layout_marginBottom="4dp"/>
+
+            <EditText
+                android:id="@+id/etCheckoutAddress"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="e.g. Wattala, Western Province"
+                android:textColor="#FFFFFF"
+                android:textColorHint="#888888"
+                android:inputType="textMultiLine"
+                android:background="#161625"
+                android:padding="12dp"/>
+        </LinearLayout>
+
         <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Payment Method" android:textColor="#FFFFFF" android:textSize="18sp" android:layout_marginBottom="8dp"/>
         <RadioGroup android:id="@+id/rgPayment" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="32dp">
             <RadioButton android:id="@+id/rbCard" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Card Payment" android:textColor="#FFF" android:buttonTint="#9D00FF" android:checked="true"/>
-            <RadioButton android:id="@+id/rbCOD" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Cash on Delivery (COD)" android:textColor="#FFF" android:buttonTint="#9D00FF"/>
+            <RadioButton android:id="@+id/rbCOD" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Cash on Delivery (COD)" android:textColor="#666666" android:buttonTint="#9D00FF" android:enabled="false"/>
             <RadioButton android:id="@+id/rbStore" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Pay at Store" android:textColor="#FFF" android:buttonTint="#9D00FF"/>
         </RadioGroup>
 
-        <TextView android:id="@+id/tvTotal" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Total: Rs. 1,500.00" android:textSize="22sp" android:textStyle="bold" android:textColor="#FF003C" android:gravity="center" android:layout_marginBottom="24dp"/>
+        <TextView android:id="@+id/tvTotal" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Total: Rs. 1500.00" android:textSize="22sp" android:textStyle="bold" android:textColor="#FF003C" android:gravity="center" android:layout_marginBottom="24dp"/>
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btnConfirmPayment"
