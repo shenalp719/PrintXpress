@@ -41,18 +41,18 @@ public class NotificationHelper {
 
     // Assignment Specific Triggers
     public static void sendLoginAlert(Context context) {
-        send(context, 1, "SYSTEM//SECURED", "Authentication successful. Welcome back to Neo Print//Xpress.");
+        send(context, 1, "Login Successful", "Welcome back to PrintXpress!");
     }
 
     public static void sendPromoAlert(Context context) {
-        send(context, 2, "FESTIVE PROMO ACTIVE \uD83C\uDF89", "Get 20% off all bulk business card orders and festive sticker designs this week!");
+        send(context, 2, "Festive Promo Active \uD83C\uDF89", "Get 20% off all bulk business card orders and festive sticker designs this week!");
     }
 
     public static void sendOrderConfirmedAlert(Context context, String product) {
-        send(context, 3, "ORDER CONFIRMED", "Your order for " + product + " has been received and is now processing.");
+        send(context, 3, "Order Confirmed", "Your order for " + product + " has been received and is now processing.");
     }
 
     public static void sendOrderCompletedAlert(Context context, String orderId) {
-        send(context, 4, "ORDER READY", "Good news! Order #" + orderId + " has been successfully completed and is ready.");
+        send(context, 4, "Order Ready", "Good news! Order #" + orderId + " has been successfully completed and is ready.");
     }
 }
