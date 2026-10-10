@@ -38,27 +38,27 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
-        // Login Logic
+        // Unified Dual-Login Logic
         btnLogin.setOnClickListener(v -> {
-            String email = etEmail.getText().toString().trim();
+            String identifier = etEmail.getText().toString().trim();
             String password = etPassword.getText().toString().trim();
 
-            if (email.isEmpty() || password.isEmpty()) {
+            if (identifier.isEmpty() || password.isEmpty()) {
                 Toast.makeText(MainActivity.this, "Please enter all fields", Toast.LENGTH_SHORT).show();
                 return;
             }
 
-            boolean isValid = db.checkUser(email, password);
-            if (isValid) {
-                android.content.SharedPreferences sharedPreferences = getSharedPreferences("PrintXpressPrefs", MODE_PRIVATE);
-                android.content.SharedPreferences.Editor editor = sharedPreferences.edit();
-                editor.putString("LOGGED_IN_EMAIL", email);
-                editor.apply();
+            // Authenticate and fetch the primary account ID
+            String resolvedSessionId = db.authenticateUser(identifier, password);
 
-                Toast.makeText(MainActivity.this, "Login Successful!", Toast.LENGTH_SHORT).show();
+            if (resolvedSessionId != null) {
+                // Save the consistent primary ID to memory, preventing split order histories
+                getSharedPreferences("PrintXpressPrefs", MODE_PRIVATE).edit().putString("LOGGED_IN_EMAIL", resolvedSessionId).apply();
 
-                Intent intent = new Intent(MainActivity.this, DashboardActivity.class);
-                startActivity(intent);
+                NotificationHelper.sendLoginAlert(MainActivity.this);
+                NotificationHelper.sendPromoAlert(MainActivity.this);
+
+                startActivity(new Intent(MainActivity.this, DashboardActivity.class));
                 finish();
             } else {
                 Toast.makeText(MainActivity.this, "Invalid Credentials", Toast.LENGTH_SHORT).show();
