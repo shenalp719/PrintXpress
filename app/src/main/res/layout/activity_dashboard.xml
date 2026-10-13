@@ -30,11 +30,13 @@
                 android:textStyle="bold" />
 
             <TextView
+                android:id="@+id/tvGreeting"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="STATUS: SECURE_CONNECTION_ACTIVE"
-                android:textSize="11sp"
-                android:textColor="#FF003C"
+                android:text="Hello User!"
+                android:textSize="16sp"
+                android:textColor="#AAAAAA"
+                android:textStyle="bold"
                 android:layout_marginBottom="24dp"/>
 
             <!-- ROW 1: Business Cards & Stickers -->

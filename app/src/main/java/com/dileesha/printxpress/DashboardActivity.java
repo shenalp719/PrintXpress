@@ -1,19 +1,22 @@
 package com.dileesha.printxpress;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class DashboardActivity extends AppCompatActivity {
 
-    // ADDED btnBusinessCards here
+
     Button btnBusinessCards, btnStickers, btnFlyers, btnTshirts, btnPosters, btnMugs, btnBanners, btnGallery, btnSupport;
     BottomNavigationView bottomNavigationView;
+    TextView tvGreeting; // 1. Declared the new TextView
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,7 +24,7 @@ public class DashboardActivity extends AppCompatActivity {
         setContentView(R.layout.activity_dashboard);
 
         // Map all 7 product buttons
-        btnBusinessCards = findViewById(R.id.btnBusinessCards); // ADDED this line
+        btnBusinessCards = findViewById(R.id.btnBusinessCards);
         btnStickers = findViewById(R.id.btnStickers);
         btnFlyers = findViewById(R.id.btnFlyers);
         btnTshirts = findViewById(R.id.btnTshirts);
@@ -32,6 +35,24 @@ public class DashboardActivity extends AppCompatActivity {
         btnGallery = findViewById(R.id.btnGallery);
         btnSupport = findViewById(R.id.btnSupport);
         bottomNavigationView = findViewById(R.id.bottomNavigationView);
+
+        // 2. Map the greeting TextView
+        tvGreeting = findViewById(R.id.tvGreeting);
+
+        // 3. Retrieve the email and set the dynamic greeting
+        SharedPreferences prefs = getSharedPreferences("PrintXpressPrefs", MODE_PRIVATE);
+        String currentUserEmail = prefs.getString("LOGGED_IN_EMAIL", "Unknown");
+
+        String userName = "User";
+        if (!currentUserEmail.equals("Unknown") && currentUserEmail.contains("@")) {
+            userName = currentUserEmail.split("@")[0]; // Get everything before '@'
+            if (userName.length() > 0) {
+                // Capitalize the first letter
+                userName = userName.substring(0, 1).toUpperCase() + userName.substring(1);
+            }
+        }
+        tvGreeting.setText("Hello " + userName + "!");
+
 
         // Bulletproof Click Listener
         View.OnClickListener productClickListener = new View.OnClickListener() {
@@ -55,8 +76,8 @@ public class DashboardActivity extends AppCompatActivity {
             }
         };
 
-        // Attach the listener to all 7 buttons
-        btnBusinessCards.setOnClickListener(productClickListener); // ADDED this line
+        // Listeners
+        btnBusinessCards.setOnClickListener(productClickListener);
         btnStickers.setOnClickListener(productClickListener);
         btnFlyers.setOnClickListener(productClickListener);
         btnTshirts.setOnClickListener(productClickListener);
@@ -90,5 +111,6 @@ public class DashboardActivity extends AppCompatActivity {
                 return false;
             }
         });
+
     }
 }
