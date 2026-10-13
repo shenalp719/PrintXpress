@@ -61,8 +61,8 @@
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".RegisterActivity"
-            android:exported="false"
-            android:windowSoftInputMode="adjustResize" />
+            android:windowSoftInputMode="adjustPan"
+            android:exported="false" />
     </application>
 
 </manifest>
